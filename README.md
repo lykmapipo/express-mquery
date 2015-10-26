@@ -59,10 +59,10 @@ app.get('/',function(request, response, next){
 ```
 
 ## TODO
-- [ ] Use express-paginate
-- [ ] allow pagination
+- [ ] intergrate with express-paginate
+- [ ] intergrate with mongoose-paginate
 - [ ] pass max limit options on the plugin
-- [ ] testing geo queries
+- [ ] parsing geo queries
 
 ## Testing
 
