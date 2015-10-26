@@ -9,7 +9,7 @@ var prepareQuery = require(path.join(__dirname, 'lib', 'prepareQuery'));
 exports.middleware = prepareQuery;
 
 //export mongoose plugin
-exports.mquery = function(schema, options) {
+exports.plugin = function(schema, options) {
     options = options || {};
 
     /**
