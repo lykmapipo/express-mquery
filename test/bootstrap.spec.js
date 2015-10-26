@@ -4,14 +4,9 @@
 process.env.NODE_ENV = 'test';
 
 //dependencies
-var path = require('path');
 var faker = require('faker');
 var async = require('async');
 var mongoose = require('mongoose');
-
-//load schemas
-require(path.join(__dirname, '..', 'models', 'User'));
-
 
 //additional faker helpers
 faker.lorem.word = function() {

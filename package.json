@@ -1,53 +1,56 @@
 {
-    "name": "express-mquery",
-    "version": "0.1.0",
-    "description": "Expose mongoose query API through HTTP request",
-    "main": "index.js",
-    "scripts": {
-        "test": "grunt test"
-    },
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/lykmapipo/express-mquery.git"
-    },
-    "author": "Lally Elias",
-    "license": "MIT",
-    "bugs": {
-        "url": "https://github.com/lykmapipo/express-mquery/issues"
-    },
-    "homepage": "https://github.com/lykmapipo/express-mquery",
-    "contributors": [{
-        "name": "lykmapipo",
-        "github": "https://github.com/lykmapipo"
-    }],
-    "keywords": [
-        "mongoose",
-        "mongoose-plugin",
-        "query",
-        "blueprint",
-        "api",
-        "rest",
-        "search",
-        "filter",
-        "find",
-        "middleware",
-        "mongodb",
-        "model"
-    ],
-    "dependencies": {
-        "async": "^1.4.2",
-        "lodash": "^3.10.1"
-    },
-    "devDependencies": {
-        "chai": "^3.4.0",
-        "faker": "^2.1.2",
-        "grunt": "^0.4.5",
-        "grunt-contrib-jshint": "^0.11.2",
-        "grunt-mocha-test": "^0.12.7",
-        "jshint-stylish": "^1.0.1",
-        "mocha": "^2.1.0",
-        "mongoose": "^4.1.10",
-        "sinon": "^1.17.2",
-        "sinon-chai": "^2.8.0"
+  "name": "express-mquery",
+  "version": "0.1.0",
+  "description": "Expose mongoose query API through HTTP request",
+  "main": "index.js",
+  "scripts": {
+    "test": "grunt test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/lykmapipo/express-mquery.git"
+  },
+  "author": "Lally Elias",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/lykmapipo/express-mquery/issues"
+  },
+  "homepage": "https://github.com/lykmapipo/express-mquery",
+  "contributors": [
+    {
+      "name": "lykmapipo",
+      "github": "https://github.com/lykmapipo"
     }
+  ],
+  "keywords": [
+    "mongoose",
+    "mongoose-plugin",
+    "query",
+    "blueprint",
+    "api",
+    "rest",
+    "search",
+    "filter",
+    "find",
+    "middleware",
+    "mongodb",
+    "model"
+  ],
+  "dependencies": {
+    "lodash": "^3.10.1"
+  },
+  "devDependencies": {
+    "async": "^1.5.0",
+    "chai": "^3.4.0",
+    "faker": "^2.1.2",
+    "grunt": "^0.4.5",
+    "grunt-contrib-jshint": "^0.11.2",
+    "grunt-mocha-test": "^0.12.7",
+    "jshint-stylish": "^1.0.1",
+    "mocha": "^2.1.0",
+    "mongoose": "^4.1.10",
+    "sinon": "^1.17.2",
+    "sinon-chai": "^2.8.0",
+    "supertest": "^1.1.0"
+  }
 }
