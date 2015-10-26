@@ -13,40 +13,29 @@ $ npm install --save express-mquery
 ```
 
 ## Usage
+- plugin `express-mquery` to mongoose
+```js
+var mquery = require('express-mquery');
+mongoose.plugin(mquery.plugin, {limit:10});
+```
+
+- add `express-mquery` middleware to expess
 ```js
 var mquery = require('express-mquery');
 var app = require('express');
 ...
-//somwhere before your router definition add
+//somewhere before your router definition add
 app.use(mquery.middleware());
-
 ...
 
-//somewhere in your controller/route use mquery object
-app.get('/',function(request, response, next){
-   Model
-    .find(query, function(error, models){
-        if(error){
-            next(error);
-        }
-        else{
-            respose.json(models;
-        }
-    }); 
-});
+```
 
-//parse mquery using plugin
-var UserSchema = new Schema({
-    ...
-});
-UserSchema.plugin({limit:20});
-...
-
-//then exec query
+- parse http query string using `express-mquery` to mongoose `Query`
+```js
 var User = mongoose.model('User');
 app.get('/',function(request, response, next){
    User
-    .mquery(request);
+    .mquery(request);//return valid mongoose query
     .exec(function(error, models){
         if(error){
             next(error);
@@ -58,11 +47,100 @@ app.get('/',function(request, response, next){
 });
 ```
 
+### Usage with request
+```js
+var request = require('request')
+
+request({
+  url: '/customers',
+  qs: {
+    query: JSON.stringify({
+      $or: [{
+        name: '~Another'
+      }, {
+        $and: [{
+          name: '~Product'
+        }, {
+          price: '<=10'
+        }]
+      }],
+      price: 20
+    })
+  }
+});
+```
+
+## Querying
+All the following parameters `(sort, skip, limit, query, populate, select and distinct)` support the entire mongoose feature set.
+
+>When passing values as objects or arrays in URLs, they must be valid JSON
+
+### Sort
+```js
+GET /customers?sort=name
+GET /customers?sort=-name
+GET /customers?sort={"name":1}
+GET /customers?sort={"name":0}
+```
+
+### Skip
+```js
+GET /customers?skip=10
+```
+
+### Limit
+Only overrides `maximum limit option set by the plugin` if the queried limit is lower
+```js
+GET /customers?limit=10
+```
+
+### Query
+Supports all operators `($regex, $gt, $gte, $lt, $lte, $ne, etc.) as well as shorthands: ~, >, >=, <, <=, !=`
+
+```js
+GET /customers?query={"name":"Bob"}
+GET /customers?query={"name":{"$regex":"^(Bob)"}}
+GET /customers?query={"name":"~^(Bob)"}
+GET /customers?query={"age":{"$gt":12}}
+GET /customers?query={"age":">12"}
+GET /customers?query={"age":{"$gte":12}}
+GET /customers?query={"age":">=12"}
+GET /customers?query={"age":{"$lt":12}}
+GET /customers?query={"age":"<12"}
+GET /customers?query={"age":{"$lte":12}}
+GET /customers?query={"age":"<=12"}
+GET /customers?query={"age":{"$ne":12}}
+GET /customers?query={"age":"!=12"}
+```
+
+### Populate
+Works with create, read and update operations
+
+```js
+GET/POST/PUT /invoices?populate=customer
+GET/POST/PUT /invoices?populate={"path":"customer"}
+GET/POST/PUT /invoices?populate=[{"path":"customer"},{"path":"products"}]
+```
+
+### Select
+`_id` is always returned unless explicitely excluded
+
+```js
+GET /customers?select=name
+GET /customers?select=-name
+GET /customers?select={"name":1}
+GET /customers?select={"name":0}
+```
+
+### Distinct
+```js
+GET /customers?distinct=name
+```
+
 ## TODO
 - [ ] intergrate with express-paginate
 - [ ] intergrate with mongoose-paginate
-- [ ] pass max limit options on the plugin
-- [ ] parsing geo queries
+- [ ] support geo queries
 
 ## Testing
 
