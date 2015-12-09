@@ -36,11 +36,15 @@
         "sort",
         "skip",
         "distinct",
+        "limit",
+        "query",
+        "paginate",
         "middleware",
-        "mongodb",
-        "model"
+        "mongodb"
     ],
     "dependencies": {
+        "async": "^1.5.0",
+        "bluebird": "^3.0.6",
         "express-paginate": "^0.1.0",
         "lodash": "^3.10.1"
     },

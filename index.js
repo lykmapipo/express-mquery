@@ -4,6 +4,7 @@
 var path = require('path');
 var buildQuery = require(path.join(__dirname, 'lib', 'buildQuery'));
 var prepareQuery = require(path.join(__dirname, 'lib', 'prepareQuery'));
+var mongoosePaginate = require(path.join(__dirname, 'lib', 'mongoosePaginate'));
 var expressPaginate = require('express-paginate');
 
 //export express middleware
@@ -40,4 +41,18 @@ exports.plugin = function(schema, options) {
     };
 
 
+    /**
+     * @description build mongoose paginate query from request.mquery object
+     * @param  {Request}   request valid express HTTP request
+     * @param  {Function} [done]   callback to invoke on success or error, if not
+     *                             provided a promise will be returned
+     */
+    schema.statics.paginate = function(request, done) {
+        if (_.isFunction(done)) {
+            return mongoosePaginate(request.mquery, done);
+        } else {
+            return mongoosePaginate(request.mquery);
+        }
+
+    }
 };
