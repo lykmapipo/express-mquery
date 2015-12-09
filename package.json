@@ -33,6 +33,9 @@
         "search",
         "filter",
         "find",
+        "sort",
+        "skip",
+        "distinct",
         "middleware",
         "mongodb",
         "model"
@@ -47,6 +50,7 @@
         "express": "^4.13.3",
         "grunt": "^0.4.5",
         "grunt-contrib-jshint": "^0.11.2",
+        "grunt-contrib-watch": "^0.6.1",
         "grunt-mocha-test": "^0.12.7",
         "jshint-stylish": "^1.0.1",
         "mocha": "^2.1.0",

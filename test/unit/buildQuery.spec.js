@@ -36,44 +36,22 @@ describe('buildQuery', function() {
         expect(result).to.be.eql(query);
     });
 
-    describe('query', function() {
-        it('calls where and returns a query object', function() {
+    describe('distinct', function() {
+        it('calls distinct and returns a query object', function() {
             var queryOptions = {
-                query: 'foo'
+                distinct: 'foo'
             };
 
             var result = buildQuery({})(query, queryOptions);
 
-            expect(query.where).to.have.been.calledOnce;
-            expect(query.where).to.have.been.calledWithExactly(queryOptions.query);
-            expect(query.skip).to.have.not.been.called;
+            expect(query.distinct).to.have.been.calledOnce;
+            expect(query.distinct).to.have.been.calledWithExactly(queryOptions.distinct);
+            expect(query.where).to.have.not.been.Called;
+            expect(query.skip).to.have.not.been.Called;
             expect(query.limit).to.have.not.been.called;
             expect(query.sort).to.have.not.been.called;
-            expect(query.select).to.have.not.been.called;
             expect(query.populate).to.have.not.been.called;
-            expect(query.distinct).to.have.not.been.called;
-
-            expect(result).to.be.eql(query);
-
-        });
-    });
-
-    describe('skip', function() {
-        it('calls skip and returns a query object', function() {
-            var queryOptions = {
-                skip: '1'
-            };
-
-            var result = buildQuery({})(query, queryOptions);
-
-            expect(query.skip).to.have.been.calledOnce;
-            expect(query.skip).to.have.been.calledWithExactly(queryOptions.skip);
-            expect(query.where).to.have.not.been.called;
-            expect(query.limit).to.have.not.been.called;
-            expect(query.sort).to.have.not.been.called;
             expect(query.select).to.have.not.been.called;
-            expect(query.populate).to.have.not.been.called;
-            expect(query.distinct).to.have.not.been.called;
 
             expect(result).to.be.eql(query);
         });
@@ -162,51 +140,6 @@ describe('buildQuery', function() {
         });
     });
 
-    describe('sort', function() {
-        it('calls sort and returns a query object', function() {
-            var queryOptions = {
-                sort: 'foo'
-            };
-
-            var result = buildQuery({})(query, queryOptions);
-
-            expect(query.sort).to.have.been.calledOnce;
-            expect(query.sort).to.have.been.calledWithExactly(queryOptions.sort);
-            expect(query.where).to.have.not.been.called;
-            expect(query.limit).to.have.not.been.called;
-            expect(query.skip).to.have.not.been.called;
-            expect(query.select).to.have.not.been.called;
-            expect(query.populate).to.have.not.been.called;
-            expect(query.distinct).to.have.not.been.called;
-
-            expect(result).to.be.eql(query);
-        });
-    });
-
-    describe('select', function() {
-        it('accepts an object', function() {
-            var queryOptions = {
-                select: {
-                    foo: 1,
-                    bar: 0
-                }
-            };
-
-            var result = buildQuery({})(query, queryOptions);
-
-            expect(query.select).to.have.been.calledOnce;
-            expect(query.select).to.have.been.calledWithExactly(queryOptions.select);
-            expect(query.where).to.have.not.been.called;
-            expect(query.limit).to.have.not.been.called;
-            expect(query.skip).to.have.not.been.called;
-            expect(query.sort).to.have.not.been.called;
-            expect(query.populate).to.have.not.been.called;
-            expect(query.distinct).to.have.not.been.called;
-
-            expect(result).to.be.eql(query);
-        });
-    });
-
     describe('populate', function() {
         it('accepts an object wrapped in an array to populate a path', function() {
             var queryOptions = {
@@ -237,24 +170,91 @@ describe('buildQuery', function() {
         });
     });
 
-    describe('distinct', function() {
-        it('calls distinct and returns a query object', function() {
+    describe('select', function() {
+        it('accepts an object', function() {
             var queryOptions = {
-                distinct: 'foo'
+                select: {
+                    foo: 1,
+                    bar: 0
+                }
             };
 
             var result = buildQuery({})(query, queryOptions);
 
-            expect(query.distinct).to.have.been.calledOnce;
-            expect(query.distinct).to.have.been.calledWithExactly(queryOptions.distinct);
-            expect(query.where).to.have.not.been.Called;
-            expect(query.skip).to.have.not.been.Called;
+            expect(query.select).to.have.been.calledOnce;
+            expect(query.select).to.have.been.calledWithExactly(queryOptions.select);
+            expect(query.where).to.have.not.been.called;
             expect(query.limit).to.have.not.been.called;
+            expect(query.skip).to.have.not.been.called;
             expect(query.sort).to.have.not.been.called;
             expect(query.populate).to.have.not.been.called;
-            expect(query.select).to.have.not.been.called;
+            expect(query.distinct).to.have.not.been.called;
 
             expect(result).to.be.eql(query);
+        });
+    });
+
+    describe('skip', function() {
+        it('calls skip and returns a query object', function() {
+            var queryOptions = {
+                skip: '1'
+            };
+
+            var result = buildQuery({})(query, queryOptions);
+
+            expect(query.skip).to.have.been.calledOnce;
+            expect(query.skip).to.have.been.calledWithExactly(queryOptions.skip);
+            expect(query.where).to.have.not.been.called;
+            expect(query.limit).to.have.not.been.called;
+            expect(query.sort).to.have.not.been.called;
+            expect(query.select).to.have.not.been.called;
+            expect(query.populate).to.have.not.been.called;
+            expect(query.distinct).to.have.not.been.called;
+
+            expect(result).to.be.eql(query);
+        });
+    });
+
+    describe('sort', function() {
+        it('calls sort and returns a query object', function() {
+            var queryOptions = {
+                sort: 'foo'
+            };
+
+            var result = buildQuery({})(query, queryOptions);
+
+            expect(query.sort).to.have.been.calledOnce;
+            expect(query.sort).to.have.been.calledWithExactly(queryOptions.sort);
+            expect(query.where).to.have.not.been.called;
+            expect(query.limit).to.have.not.been.called;
+            expect(query.skip).to.have.not.been.called;
+            expect(query.select).to.have.not.been.called;
+            expect(query.populate).to.have.not.been.called;
+            expect(query.distinct).to.have.not.been.called;
+
+            expect(result).to.be.eql(query);
+        });
+    });
+
+    describe('where', function() {
+        it('calls where and returns a query object', function() {
+            var queryOptions = {
+                query: 'foo'
+            };
+
+            var result = buildQuery({})(query, queryOptions);
+
+            expect(query.where).to.have.been.calledOnce;
+            expect(query.where).to.have.been.calledWithExactly(queryOptions.query);
+            expect(query.skip).to.have.not.been.called;
+            expect(query.limit).to.have.not.been.called;
+            expect(query.sort).to.have.not.been.called;
+            expect(query.select).to.have.not.been.called;
+            expect(query.populate).to.have.not.been.called;
+            expect(query.distinct).to.have.not.been.called;
+
+            expect(result).to.be.eql(query);
+
         });
     });
 
