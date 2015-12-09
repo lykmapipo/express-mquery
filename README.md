@@ -5,8 +5,6 @@ express-mquery
 
 Expose [mongoose](https://github.com/Automattic/mongoose) query API through HTTP request.
 
-Most of codes extracted from [express-restify-mongoose](https://github.com/florianholzapfel/express-restify-mongoose).
-
 ## Installation
 ```js
 $ npm install --save express-mquery
@@ -24,8 +22,8 @@ mongoose.plugin(mquery.plugin, {limit:10});
 var mquery = require('express-mquery');
 var app = require('express');
 ...
-//somewhere before your router definition add
-app.use(mquery.middleware());
+//somewhere before your routes definition add
+app.use(mquery.middleware({limit:10, maxLimit:50}));
 ...
 
 ```
@@ -45,6 +43,25 @@ app.get('/',function(request, response, next){
         }
     }); 
 });
+```
+or
+
+- parse http query string and paginate documents
+```js
+User
+    .paginate(request, function(error, users, pages, total) {
+        if (error) {
+            response.status(500).json({
+                error: error.message
+            });
+        } else {
+            response.json({
+                users: users,
+                pages: pages,
+                total: total
+            });
+        }
+    });
 ```
 
 ### Usage with request
@@ -137,9 +154,7 @@ GET /customers?select={"name":0}
 GET /customers?distinct=name
 ```
 
-## TODO
-- [ ] intergrate with express-paginate
-- [ ] intergrate with mongoose-paginate
+## TODOS
 - [ ] support geo queries
 
 ## Testing
