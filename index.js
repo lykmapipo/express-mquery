@@ -54,6 +54,16 @@ exports.plugin = function(schema, options) {
         //obtain mongoose query object
         var query = request.mquery ? request.mquery : request;
 
+        //extend mquery if exist
+        if (request.mquery) {
+            //pick page and limit from request query params
+            var pageAndLimit = _.pick(request.query, ['page', 'limit']);
+
+            //extend query with page and limit request params
+            query =
+                _.merge({}, query, pageAndLimit);
+        }
+
         //execute query
         if (_.isFunction(done)) {
             return mongoosePaginate.call(this, query, done);
