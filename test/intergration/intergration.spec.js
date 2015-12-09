@@ -42,6 +42,25 @@ describe('express-mquery', function() {
                 });
         });
 
+        app.get('/paginates', function(request, response) {
+            var Customer = mongoose.model('Customer');
+
+            Customer
+                .paginate(request, function(error, users, pages, total) {
+                    if (error) {
+                        response.status(500).json({
+                            error: error.message
+                        });
+                    } else {
+                        response.json({
+                            users: users,
+                            pages: pages,
+                            total: total
+                        });
+                    }
+                });
+        });
+
         app.get('/invoices', function(request, response) {
             var Invoice = mongoose.model('Invoice');
 
@@ -67,10 +86,35 @@ describe('express-mquery', function() {
         expect(mquery.middleware).to.be.a('function');
     });
 
-    it('should export mongoose plugin', function() {
+    it('should export mongoose plugin that add `mquery` and `paginate` static functions', function() {
         var Customer = mongoose.model('Customer');
         expect(mquery.plugin).to.be.a('function');
         expect(Customer.mquery).to.be.a('function');
+        expect(Customer.paginate).to.be.a('function');
+    });
+
+    describe('distinct', function() {
+        it('GET /customers?distinct=name 200 - array of unique names', function(done) {
+            request(app)
+                .get('/customers')
+                .query({
+                    distinct: 'name'
+                })
+                .expect('Content-Type', /json/)
+                .expect(200)
+                .end(function(error, response) {
+                    expect(error).to.not.exist;
+
+                    var body = response.body;
+
+                    expect(body.length).to.be.equal(3);
+                    expect(body[0]).to.be.equal('Bob');
+                    expect(body[1]).to.be.equal('John');
+                    expect(body[2]).to.be.equal('Mike');
+
+                    done(error, response);
+                });
+        });
     });
 
     describe('limit', function() {
@@ -85,6 +129,481 @@ describe('express-mquery', function() {
                 .end(function(error, response) {
                     expect(error).to.not.exist;
                     expect(response.body.length).to.be.equal(1);
+                    done(error, response);
+                });
+        });
+    });
+
+    describe('populate', function() {
+        it('GET /invoices?populate=customer 200', function(done) {
+            request(app)
+                .get('/invoices')
+                .query({
+                    populate: 'customer'
+                }).expect('Content-Type', /json/)
+                .expect(200)
+                .end(function(error, response) {
+                    expect(error).to.not.exist;
+
+                    var body = response.body;
+
+                    expect(body.length).to.be.equal(3);
+
+                    body.forEach(function(invoice) {
+                        expect(invoice.customer).to.be.ok;
+                        expect(invoice.customer._id).to.be.ok;
+                        expect(invoice.customer.name).to.be.ok;
+                        expect(invoice.customer.age).to.be.ok;
+                    });
+
+                    done(error, body);
+                });
+        });
+
+        it('GET /invoices?populate={path:"customer"} 200', function(done) {
+            request(app)
+                .get('/invoices')
+                .query({
+                    populate: JSON.stringify({
+                        path: 'customer'
+                    })
+                })
+                .expect('Content-Type', /json/)
+                .expect(200)
+                .end(function(error, response) {
+                    expect(error).to.not.exist;
+
+                    var body = response.body;
+
+                    expect(body.length).to.be.equal(3);
+
+                    body.forEach(function(invoice) {
+                        expect(invoice.customer).to.be.ok;
+                        expect(invoice.customer._id).to.be.ok;
+                        expect(invoice.customer.name).to.be.ok;
+                        expect(invoice.customer.age).to.be.ok;
+                    });
+
+                    done(error, response);
+                });
+        });
+
+        it('GET /invoices?populate=[{path:"customer"}] 200', function(done) {
+            request(app)
+                .get('/invoices')
+                .query({
+                    populate: JSON.stringify([{
+                        path: 'customer'
+                    }])
+                })
+                .expect('Content-Type', /json/)
+                .expect(200)
+                .end(function(error, response) {
+                    expect(error).to.not.exist;
+
+                    var body = response.body;
+
+                    expect(body.length).to.be.equal(3);
+
+                    body.forEach(function(invoice) {
+                        expect(invoice.customer).to.be.ok;
+                        expect(invoice.customer._id).to.be.ok;
+                        expect(invoice.customer.name).to.be.ok;
+                        expect(invoice.customer.age).to.be.ok;
+                    });
+
+                    done(error, response);
+                });
+        });
+
+        it('GET /customers?populate=favorites.purchase.item 200 - nested field', function(done) {
+            request(app)
+                .get('/customers')
+                .query({
+                    populate: 'favorites.purchase.item'
+                })
+                .expect('Content-Type', /json/)
+                .expect(200)
+                .end(function(error, response) {
+                    expect(error).to.not.exist;
+
+                    var body = response.body;
+
+                    expect(body.length).to.be.equal(3);
+
+                    body.forEach(function(customer) {
+                        expect(customer.favorites.purchase).to.be.ok;
+                        expect(customer.favorites.purchase.item).to.be.ok;
+                        expect(customer.favorites.purchase.item._id).to.be.ok;
+                        expect(customer.favorites.purchase.item.name).to.be.ok;
+                        expect(customer.favorites.purchase.number).to.be.ok;
+                    });
+
+                    done(error, response);
+                });
+        });
+
+        it('GET /invoices?populate=customer.account 200 - ignore deep populate', function(done) {
+            request(app)
+                .get('/invoices')
+                .query({
+                    populate: 'customer.account'
+                })
+                .expect('Content-Type', /json/)
+                .expect(200)
+                .end(function(error, response) {
+                    expect(error).to.not.exist;
+
+                    var body = response.body;
+
+                    expect(body.length).to.be.equal(3);
+                    body.forEach(function(invoice) {
+                        expect(invoice.customer).to.be.ok;
+                        expect(typeof invoice.customer).to.be.equal('string');
+                    });
+
+                    done(error, response);
+                });
+        });
+
+        it('GET /invoices?populate=evilCustomer 200 - ignore unknown field', function(done) {
+            request(app)
+                .get('/invoices')
+                .query({
+                    populate: 'evilCustomer'
+                })
+                .expect('Content-Type', /json/)
+                .expect(200)
+                .end(function(error, response) {
+                    expect(error).to.not.exist;
+
+                    var body = response.body;
+
+                    expect(body.length).to.be.equal(3);
+
+                    done(error, response);
+                });
+        });
+
+        describe('with select', function() {
+            it('GET invoices?populate=customer&select=amount 200 - only include amount and customer document', function(done) {
+                request(app)
+                    .get('/invoices')
+                    .query({
+                        populate: 'customer',
+                        select: 'amount'
+                    })
+                    .expect('Content-Type', /json/)
+                    .expect(200)
+                    .end(function(error, response) {
+                        expect(error).to.not.exist;
+
+                        var body = response.body;
+
+                        expect(body.length).to.be.equal(3);
+
+                        body.forEach(function(invoice) {
+                            expect(invoice.amount).to.be.ok;
+                            expect(invoice.customer).to.be.ok;
+                            expect(invoice.customer._id).to.be.ok;
+                            expect(invoice.customer.name).to.be.ok;
+                            expect(invoice.customer.age).to.be.ok;
+                            expect(invoice.receipt).to.be.undefined;
+                        });
+
+                        done(error, response);
+                    });
+            });
+
+            it('GET invoices?populate=customer&select=amount,customer.name 200 - only include amount and customer name', function(done) {
+                request(app)
+                    .get('/invoices')
+                    .query({
+                        populate: 'customer',
+                        select: 'amount,customer.name'
+                    })
+                    .expect('Content-Type', /json/)
+                    .expect(200)
+                    .end(function(error, response) {
+                        expect(error).to.not.exist;
+
+                        var body = response.body;
+
+                        expect(body.length).to.be.equal(3);
+                        body.forEach(function(invoice) {
+                            expect(invoice.amount).to.be.ok;
+                            expect(invoice.customer).to.be.ok;
+                            expect(invoice.customer._id).to.be.ok;
+                            expect(invoice.customer.name).to.be.ok;
+                            expect(invoice.customer.age).to.be.undefined;
+                            expect(invoice.receipt).to.be.undefined;
+                        });
+
+                        done(error, response);
+                    });
+            });
+
+            it('GET invoices?populate=customer&select=customer.name 200 - include all invoice fields, but only include customer name', function(done) {
+                request(app)
+                    .get('/invoices')
+                    .query({
+                        populate: 'customer',
+                        select: 'customer.name'
+                    })
+                    .expect('Content-Type', /json/)
+                    .expect(200)
+                    .end(function(error, response) {
+                        expect(error).to.not.exist;
+
+                        var body = response.body;
+
+                        expect(body.length).to.be.equal(3);
+
+                        body.forEach(function(invoice) {
+                            expect(invoice.amount).to.be.ok;
+                            expect(invoice.receipt).to.be.ok;
+                            expect(invoice.customer).to.be.ok;
+                            expect(invoice.customer._id).to.be.ok;
+                            expect(invoice.customer.name).to.be.ok;
+                            expect(invoice.customer.age).to.be.undefined;
+                        });
+
+                        done(error, response);
+                    });
+            });
+
+            it('GET invoices?populate=customer&select=-customer.name 200 - include all invoice and fields, but exclude customer name', function(done) {
+                request(app)
+                    .get('/invoices')
+                    .query({
+                        populate: 'customer',
+                        select: '-customer.name'
+                    })
+                    .expect('Content-Type', /json/)
+                    .expect(200)
+                    .end(function(error, response) {
+                        expect(error).to.not.exist;
+
+                        var body = response.body;
+
+                        expect(body.length).to.be.equal(3);
+
+                        body.forEach(function(invoice) {
+                            expect(invoice.amount).to.be.ok;
+                            expect(invoice.receipt).to.be.ok;
+                            expect(invoice.customer).to.be.ok;
+                            expect(invoice.customer._id).to.be.ok;
+                            expect(invoice.customer.age).to.be.ok;
+                            expect(invoice.customer.name).to.be.undefined;
+                        });
+
+                        done(error, response);
+                    });
+            });
+
+            it('GET invoices?populate=customer&select=amount,-customer._id,customer.name 200 - only include amount and customer name and exclude customer _id', function(done) {
+                request(app)
+                    .get('/invoices')
+                    .query({
+                        populate: 'customer',
+                        select: 'amount,-customer._id,customer.name'
+                    })
+                    .expect('Content-Type', /json/)
+                    .expect(200)
+                    .end(function(error, response) {
+                        expect(error).to.not.exist;
+
+                        var body = response.body;
+
+                        expect(body.length).to.be.equal(3);
+
+                        body.forEach(function(invoice) {
+                            expect(invoice.amount).to.be.ok;
+                            expect(invoice.customer).to.be.ok;
+                            expect(invoice.customer.name).to.be.ok;
+                            expect(invoice.receipt).to.be.undefined;
+                            expect(invoice.customer._id).to.be.undefined;
+                            expect(invoice.customer.age).to.be.undefined;
+                        });
+
+                        done(error, response);
+                    });
+            });
+
+            it('GET invoices?populate=customer&select=customer.name,customer.age 200 - only include customer name and age', function(done) {
+                request(app)
+                    .get('/invoices')
+                    .query({
+                        populate: 'customer',
+                        select: 'customer.name,customer.age'
+                    })
+                    .expect('Content-Type', /json/)
+                    .expect(200)
+                    .end(function(error, response) {
+                        expect(error).to.not.exist;
+
+                        var body = response.body;
+
+                        expect(body.length).to.be.equal(3);
+
+                        body.forEach(function(invoice) {
+                            expect(invoice.amount).to.be.ok;
+                            expect(invoice.receipt).to.be.ok;
+                            expect(invoice.customer).to.be.ok;
+                            expect(invoice.customer._id).to.be.ok;
+                            expect(invoice.customer.name).to.ok;
+                            expect(invoice.customer.age).to.be.ok;
+                        });
+
+                        done(error, response);
+                    });
+            });
+        });
+    });
+
+    describe('paginate', function() {
+        it('GET /paginates', function(done) {
+            request(app)
+                .get('/paginates')
+                .expect('Content-Type', /json/)
+                .expect(200)
+                .end(function(error, response) {
+                    expect(error).to.not.exist;
+
+                    var body = response.body;
+
+                    expect(body.total).to.exist;
+                    expect(body.pages).to.exist;
+
+                    expect(body.users.length).to.be.equal(3);
+                    expect(body.users[0].name).to.be.equal('Bob');
+                    expect(body.users[1].name).to.be.equal('John');
+                    expect(body.users[2].name).to.be.equal('Mike');
+
+                    done(error, response);
+                });
+        });
+    });
+
+    describe('select', function() {
+        it('GET /customers?select=name 200 - only include', function(done) {
+            request(app)
+                .get('/customers')
+                .query({
+                    select: 'name'
+                })
+                .expect('Content-Type', /json/)
+                .expect(200)
+                .end(function(error, response) {
+                    expect(error).to.not.exist;
+
+                    var body = response.body;
+                    expect(body.length).to.be.equal(3);
+
+                    body.forEach(function(item) {
+                        expect(Object.keys(item).length).to.be.equal(4);
+                        expect(item._id).to.be.ok;
+                        expect(item.name).to.be.ok;
+                    });
+
+                    done(error, response);
+                });
+        });
+
+        it('GET /customers?select=favorites.animal 200 - only include (nested field)', function(done) {
+            request(app)
+                .get('/customers')
+                .query({
+                    select: 'favorites.animal'
+                })
+                .expect('Content-Type', /json/)
+                .expect(200)
+                .end(function(error, response) {
+                    expect(error).to.not.exist;
+
+                    var body = response.body;
+                    expect(body.length).to.be.equal(3);
+
+                    body.forEach(function(item) {
+                        expect(Object.keys(item).length).to.be.equal(4);
+                        expect(item._id).to.be.ok;
+                        expect(item.favorites).to.be.ok;
+                        expect(item.favorites.animal).to.be.ok;
+                        expect(item.favorites.color === undefined).to.be.ok;
+                    });
+
+                    done(error, response);
+                });
+        });
+
+        it('GET /customers?select=-name 200 - exclude name', function(done) {
+            request(app)
+                .get('/customers')
+                .query({
+                    select: '-name'
+                })
+                .expect('Content-Type', /json/)
+                .expect(200)
+                .end(function(error, response) {
+                    expect(error).to.not.exist;
+
+                    var body = response.body;
+                    expect(body.length).to.be.equal(3);
+
+                    body.forEach(function(item) {
+                        expect(item.name === undefined).to.be.ok;
+                    });
+
+                    done(error, response);
+                });
+        });
+
+        it('GET /customers?select={"name":1} 200 - only include name', function(done) {
+            request(app)
+                .get('/customers')
+                .query({
+                    select: JSON.stringify({
+                        name: 1
+                    })
+                })
+                .expect('Content-Type', /json/)
+                .expect(200)
+                .end(function(error, response) {
+                    expect(error).to.not.exist;
+
+                    var body = response.body;
+                    expect(body.length).to.be.equal(3);
+
+                    body.forEach(function(item) {
+                        expect(Object.keys(item).length).to.be.equal(4);
+                        expect(item._id).to.be.ok;
+                        expect(item.name).to.be.ok;
+                    });
+
+                    done(error, response);
+                });
+        });
+
+        it('GET /customers?select={"name":0} 200 - exclude name', function(done) {
+            request(app)
+                .get('/customers')
+                .query({
+                    select: JSON.stringify({
+                        name: 0
+                    })
+                })
+                .expect('Content-Type', /json/)
+                .expect(200)
+                .end(function(error, response) {
+                    expect(error).to.not.exist;
+
+                    var body = response.body;
+                    expect(body.length).to.be.equal(3);
+
+                    body.forEach(function(item) {
+                        expect(item.name === undefined).to.be.ok;
+                    });
+
                     done(error, response);
                 });
         });
@@ -200,7 +719,7 @@ describe('express-mquery', function() {
         });
     });
 
-    describe('query', function() {
+    describe('where', function() {
         it('GET /customers?query={} 200 - empty object', function(done) {
             request(app)
                 .get('/customers')
@@ -604,481 +1123,6 @@ describe('express-mquery', function() {
                         done(error, response);
                     });
             });
-        });
-    });
-
-    describe('select', function() {
-        it('GET /customers?select=name 200 - only include', function(done) {
-            request(app)
-                .get('/customers')
-                .query({
-                    select: 'name'
-                })
-                .expect('Content-Type', /json/)
-                .expect(200)
-                .end(function(error, response) {
-                    expect(error).to.not.exist;
-
-                    var body = response.body;
-                    expect(body.length).to.be.equal(3);
-
-                    body.forEach(function(item) {
-                        expect(Object.keys(item).length).to.be.equal(4);
-                        expect(item._id).to.be.ok;
-                        expect(item.name).to.be.ok;
-                    });
-
-                    done(error, response);
-                });
-        });
-
-        it('GET /customers?select=favorites.animal 200 - only include (nested field)', function(done) {
-            request(app)
-                .get('/customers')
-                .query({
-                    select: 'favorites.animal'
-                })
-                .expect('Content-Type', /json/)
-                .expect(200)
-                .end(function(error, response) {
-                    expect(error).to.not.exist;
-
-                    var body = response.body;
-                    expect(body.length).to.be.equal(3);
-
-                    body.forEach(function(item) {
-                        expect(Object.keys(item).length).to.be.equal(4);
-                        expect(item._id).to.be.ok;
-                        expect(item.favorites).to.be.ok;
-                        expect(item.favorites.animal).to.be.ok;
-                        expect(item.favorites.color === undefined).to.be.ok;
-                    });
-
-                    done(error, response);
-                });
-        });
-
-        it('GET /customers?select=-name 200 - exclude name', function(done) {
-            request(app)
-                .get('/customers')
-                .query({
-                    select: '-name'
-                })
-                .expect('Content-Type', /json/)
-                .expect(200)
-                .end(function(error, response) {
-                    expect(error).to.not.exist;
-
-                    var body = response.body;
-                    expect(body.length).to.be.equal(3);
-
-                    body.forEach(function(item) {
-                        expect(item.name === undefined).to.be.ok;
-                    });
-
-                    done(error, response);
-                });
-        });
-
-        it('GET /customers?select={"name":1} 200 - only include name', function(done) {
-            request(app)
-                .get('/customers')
-                .query({
-                    select: JSON.stringify({
-                        name: 1
-                    })
-                })
-                .expect('Content-Type', /json/)
-                .expect(200)
-                .end(function(error, response) {
-                    expect(error).to.not.exist;
-
-                    var body = response.body;
-                    expect(body.length).to.be.equal(3);
-
-                    body.forEach(function(item) {
-                        expect(Object.keys(item).length).to.be.equal(4);
-                        expect(item._id).to.be.ok;
-                        expect(item.name).to.be.ok;
-                    });
-
-                    done(error, response);
-                });
-        });
-
-        it('GET /customers?select={"name":0} 200 - exclude name', function(done) {
-            request(app)
-                .get('/customers')
-                .query({
-                    select: JSON.stringify({
-                        name: 0
-                    })
-                })
-                .expect('Content-Type', /json/)
-                .expect(200)
-                .end(function(error, response) {
-                    expect(error).to.not.exist;
-
-                    var body = response.body;
-                    expect(body.length).to.be.equal(3);
-
-                    body.forEach(function(item) {
-                        expect(item.name === undefined).to.be.ok;
-                    });
-
-                    done(error, response);
-                });
-        });
-    });
-
-    describe('populate', function() {
-        it('GET /invoices?populate=customer 200', function(done) {
-            request(app)
-                .get('/invoices')
-                .query({
-                    populate: 'customer'
-                }).expect('Content-Type', /json/)
-                .expect(200)
-                .end(function(error, response) {
-                    expect(error).to.not.exist;
-
-                    var body = response.body;
-
-                    expect(body.length).to.be.equal(3);
-
-                    body.forEach(function(invoice) {
-                        expect(invoice.customer).to.be.ok;
-                        expect(invoice.customer._id).to.be.ok;
-                        expect(invoice.customer.name).to.be.ok;
-                        expect(invoice.customer.age).to.be.ok;
-                    });
-
-                    done(error, body);
-                });
-        });
-
-        it('GET /invoices?populate={path:"customer"} 200', function(done) {
-            request(app)
-                .get('/invoices')
-                .query({
-                    populate: JSON.stringify({
-                        path: 'customer'
-                    })
-                })
-                .expect('Content-Type', /json/)
-                .expect(200)
-                .end(function(error, response) {
-                    expect(error).to.not.exist;
-
-                    var body = response.body;
-
-                    expect(body.length).to.be.equal(3);
-
-                    body.forEach(function(invoice) {
-                        expect(invoice.customer).to.be.ok;
-                        expect(invoice.customer._id).to.be.ok;
-                        expect(invoice.customer.name).to.be.ok;
-                        expect(invoice.customer.age).to.be.ok;
-                    });
-
-                    done(error, response);
-                });
-        });
-
-        it('GET /invoices?populate=[{path:"customer"}] 200', function(done) {
-            request(app)
-                .get('/invoices')
-                .query({
-                    populate: JSON.stringify([{
-                        path: 'customer'
-                    }])
-                })
-                .expect('Content-Type', /json/)
-                .expect(200)
-                .end(function(error, response) {
-                    expect(error).to.not.exist;
-
-                    var body = response.body;
-
-                    expect(body.length).to.be.equal(3);
-
-                    body.forEach(function(invoice) {
-                        expect(invoice.customer).to.be.ok;
-                        expect(invoice.customer._id).to.be.ok;
-                        expect(invoice.customer.name).to.be.ok;
-                        expect(invoice.customer.age).to.be.ok;
-                    });
-
-                    done(error, response);
-                });
-        });
-
-        it('GET /customers?populate=favorites.purchase.item 200 - nested field', function(done) {
-            request(app)
-                .get('/customers')
-                .query({
-                    populate: 'favorites.purchase.item'
-                })
-                .expect('Content-Type', /json/)
-                .expect(200)
-                .end(function(error, response) {
-                    expect(error).to.not.exist;
-
-                    var body = response.body;
-
-                    expect(body.length).to.be.equal(3);
-
-                    body.forEach(function(customer) {
-                        expect(customer.favorites.purchase).to.be.ok;
-                        expect(customer.favorites.purchase.item).to.be.ok;
-                        expect(customer.favorites.purchase.item._id).to.be.ok;
-                        expect(customer.favorites.purchase.item.name).to.be.ok;
-                        expect(customer.favorites.purchase.number).to.be.ok;
-                    });
-
-                    done(error, response);
-                });
-        });
-
-        it('GET /invoices?populate=customer.account 200 - ignore deep populate', function(done) {
-            request(app)
-                .get('/invoices')
-                .query({
-                    populate: 'customer.account'
-                })
-                .expect('Content-Type', /json/)
-                .expect(200)
-                .end(function(error, response) {
-                    expect(error).to.not.exist;
-
-                    var body = response.body;
-
-                    expect(body.length).to.be.equal(3);
-                    body.forEach(function(invoice) {
-                        expect(invoice.customer).to.be.ok;
-                        expect(typeof invoice.customer).to.be.equal('string');
-                    });
-
-                    done(error, response);
-                });
-        });
-
-        it('GET /invoices?populate=evilCustomer 200 - ignore unknown field', function(done) {
-            request(app)
-                .get('/invoices')
-                .query({
-                    populate: 'evilCustomer'
-                })
-                .expect('Content-Type', /json/)
-                .expect(200)
-                .end(function(error, response) {
-                    expect(error).to.not.exist;
-
-                    var body = response.body;
-
-                    expect(body.length).to.be.equal(3);
-
-                    done(error, response);
-                });
-        });
-
-        describe('with select', function() {
-            it('GET invoices?populate=customer&select=amount 200 - only include amount and customer document', function(done) {
-                request(app)
-                    .get('/invoices')
-                    .query({
-                        populate: 'customer',
-                        select: 'amount'
-                    })
-                    .expect('Content-Type', /json/)
-                    .expect(200)
-                    .end(function(error, response) {
-                        expect(error).to.not.exist;
-
-                        var body = response.body;
-
-                        expect(body.length).to.be.equal(3);
-
-                        body.forEach(function(invoice) {
-                            expect(invoice.amount).to.be.ok;
-                            expect(invoice.customer).to.be.ok;
-                            expect(invoice.customer._id).to.be.ok;
-                            expect(invoice.customer.name).to.be.ok;
-                            expect(invoice.customer.age).to.be.ok;
-                            expect(invoice.receipt).to.be.undefined;
-                        });
-
-                        done(error, response);
-                    });
-            });
-
-            it('GET invoices?populate=customer&select=amount,customer.name 200 - only include amount and customer name', function(done) {
-                request(app)
-                    .get('/invoices')
-                    .query({
-                        populate: 'customer',
-                        select: 'amount,customer.name'
-                    })
-                    .expect('Content-Type', /json/)
-                    .expect(200)
-                    .end(function(error, response) {
-                        expect(error).to.not.exist;
-
-                        var body = response.body;
-
-                        expect(body.length).to.be.equal(3);
-                        body.forEach(function(invoice) {
-                            expect(invoice.amount).to.be.ok;
-                            expect(invoice.customer).to.be.ok;
-                            expect(invoice.customer._id).to.be.ok;
-                            expect(invoice.customer.name).to.be.ok;
-                            expect(invoice.customer.age).to.be.undefined;
-                            expect(invoice.receipt).to.be.undefined;
-                        });
-
-                        done(error, response);
-                    });
-            });
-
-            it('GET invoices?populate=customer&select=customer.name 200 - include all invoice fields, but only include customer name', function(done) {
-                request(app)
-                    .get('/invoices')
-                    .query({
-                        populate: 'customer',
-                        select: 'customer.name'
-                    })
-                    .expect('Content-Type', /json/)
-                    .expect(200)
-                    .end(function(error, response) {
-                        expect(error).to.not.exist;
-
-                        var body = response.body;
-
-                        expect(body.length).to.be.equal(3);
-
-                        body.forEach(function(invoice) {
-                            expect(invoice.amount).to.be.ok;
-                            expect(invoice.receipt).to.be.ok;
-                            expect(invoice.customer).to.be.ok;
-                            expect(invoice.customer._id).to.be.ok;
-                            expect(invoice.customer.name).to.be.ok;
-                            expect(invoice.customer.age).to.be.undefined;
-                        });
-
-                        done(error, response);
-                    });
-            });
-
-            it('GET invoices?populate=customer&select=-customer.name 200 - include all invoice and fields, but exclude customer name', function(done) {
-                request(app)
-                    .get('/invoices')
-                    .query({
-                        populate: 'customer',
-                        select: '-customer.name'
-                    })
-                    .expect('Content-Type', /json/)
-                    .expect(200)
-                    .end(function(error, response) {
-                        expect(error).to.not.exist;
-
-                        var body = response.body;
-
-                        expect(body.length).to.be.equal(3);
-
-                        body.forEach(function(invoice) {
-                            expect(invoice.amount).to.be.ok;
-                            expect(invoice.receipt).to.be.ok;
-                            expect(invoice.customer).to.be.ok;
-                            expect(invoice.customer._id).to.be.ok;
-                            expect(invoice.customer.age).to.be.ok;
-                            expect(invoice.customer.name).to.be.undefined;
-                        });
-
-                        done(error, response);
-                    });
-            });
-
-            it('GET invoices?populate=customer&select=amount,-customer._id,customer.name 200 - only include amount and customer name and exclude customer _id', function(done) {
-                request(app)
-                    .get('/invoices')
-                    .query({
-                        populate: 'customer',
-                        select: 'amount,-customer._id,customer.name'
-                    })
-                    .expect('Content-Type', /json/)
-                    .expect(200)
-                    .end(function(error, response) {
-                        expect(error).to.not.exist;
-
-                        var body = response.body;
-
-                        expect(body.length).to.be.equal(3);
-
-                        body.forEach(function(invoice) {
-                            expect(invoice.amount).to.be.ok;
-                            expect(invoice.customer).to.be.ok;
-                            expect(invoice.customer.name).to.be.ok;
-                            expect(invoice.receipt).to.be.undefined;
-                            expect(invoice.customer._id).to.be.undefined;
-                            expect(invoice.customer.age).to.be.undefined;
-                        });
-
-                        done(error, response);
-                    });
-            });
-
-            it('GET invoices?populate=customer&select=customer.name,customer.age 200 - only include customer name and age', function(done) {
-                request(app)
-                    .get('/invoices')
-                    .query({
-                        populate: 'customer',
-                        select: 'customer.name,customer.age'
-                    })
-                    .expect('Content-Type', /json/)
-                    .expect(200)
-                    .end(function(error, response) {
-                        expect(error).to.not.exist;
-
-                        var body = response.body;
-
-                        expect(body.length).to.be.equal(3);
-
-                        body.forEach(function(invoice) {
-                            expect(invoice.amount).to.be.ok;
-                            expect(invoice.receipt).to.be.ok;
-                            expect(invoice.customer).to.be.ok;
-                            expect(invoice.customer._id).to.be.ok;
-                            expect(invoice.customer.name).to.ok;
-                            expect(invoice.customer.age).to.be.ok;
-                        });
-
-                        done(error, response);
-                    });
-            });
-        });
-    });
-
-    describe('distinct', function() {
-        it('GET /customers?distinct=name 200 - array of unique names', function(done) {
-            request(app)
-                .get('/customers')
-                .query({
-                    distinct: 'name'
-                })
-                .expect('Content-Type', /json/)
-                .expect(200)
-                .end(function(error, response) {
-                    expect(error).to.not.exist;
-
-                    var body = response.body;
-
-                    expect(body.length).to.be.equal(3);
-                    expect(body[0]).to.be.equal('Bob');
-                    expect(body[1]).to.be.equal('John');
-                    expect(body[2]).to.be.equal('Mike');
-
-                    done(error, response);
-                });
         });
     });
 
