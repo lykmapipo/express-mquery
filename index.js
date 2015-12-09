@@ -4,12 +4,25 @@
 var path = require('path');
 var buildQuery = require(path.join(__dirname, 'lib', 'buildQuery'));
 var prepareQuery = require(path.join(__dirname, 'lib', 'prepareQuery'));
+var expressPaginate = require('express-paginate');
 
 //export express middleware
-exports.middleware = prepareQuery;
+exports.middleware = function(options) {
+    options = options || {
+        limit: 10,
+        maxLimit: 50
+    };
+
+    //return middleware stack
+    return [
+        expressPaginate.middleware(options.limit, options.maxLimit),
+        prepareQuery(options)
+    ];
+};
 
 //export mongoose plugin
 exports.plugin = function(schema, options) {
+    //normalize options
     options = options || {};
 
     /**
@@ -25,4 +38,6 @@ exports.plugin = function(schema, options) {
             return query;
         }
     };
+
+
 };

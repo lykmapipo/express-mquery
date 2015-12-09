@@ -41,6 +41,7 @@
         "model"
     ],
     "dependencies": {
+        "express-paginate": "^0.1.0",
         "lodash": "^3.10.1"
     },
     "devDependencies": {
