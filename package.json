@@ -1,6 +1,6 @@
 {
     "name": "express-mquery",
-    "version": "0.2.1",
+    "version": "0.2.2",
     "description": "Expose mongoose query API through HTTP request",
     "main": "index.js",
     "scripts": {
@@ -16,10 +16,12 @@
         "url": "https://github.com/lykmapipo/express-mquery/issues"
     },
     "homepage": "https://github.com/lykmapipo/express-mquery",
-    "contributors": [{
-        "name": "lykmapipo",
-        "github": "https://github.com/lykmapipo"
-    }],
+    "contributors": [
+        {
+            "name": "lykmapipo",
+            "github": "https://github.com/lykmapipo"
+        }
+    ],
     "keywords": [
         "mongoose",
         "mongoose-plugin",
@@ -43,25 +45,26 @@
         "mongodb"
     ],
     "dependencies": {
-        "async": "^1.5.0",
-        "bluebird": "^3.0.6",
-        "express-paginate": "^0.1.0",
-        "lodash": "^3.10.1"
+        "async": "^2.6.0",
+        "auto-parse": "^1.3.0",
+        "bluebird": "^3.5.1",
+        "express-paginate": "^0.3.0",
+        "lodash": "^4.17.4"
     },
     "devDependencies": {
-        "async": "^1.5.0",
-        "body-parser": "^1.14.1",
-        "chai": "^3.4.0",
-        "express": "^4.13.3",
-        "grunt": "^0.4.5",
-        "grunt-contrib-jshint": "^0.11.2",
-        "grunt-contrib-watch": "^0.6.1",
-        "grunt-mocha-test": "^0.12.7",
-        "jshint-stylish": "^1.0.1",
-        "mocha": "^2.1.0",
-        "mongoose": "^4.1.10",
-        "sinon": "^1.17.2",
-        "sinon-chai": "^2.8.0",
-        "supertest": "^1.1.0"
+        "async": "^2.6.0",
+        "body-parser": "^1.18.2",
+        "chai": "^4.1.2",
+        "express": "^4.16.2",
+        "grunt": "^1.0.1",
+        "grunt-contrib-jshint": "^1.1.0",
+        "grunt-contrib-watch": "^1.0.0",
+        "grunt-mocha-test": "^0.13.3",
+        "jshint-stylish": "^2.2.1",
+        "mocha": "^5.0.0",
+        "mongoose": "^5.0.2",
+        "sinon": "^4.2.2",
+        "sinon-chai": "^2.14.0",
+        "supertest": "^3.0.0"
     }
 }

@@ -10,67 +10,68 @@ var expressPaginate = require('express-paginate');
 
 //export express middleware
 exports.middleware = function(options) {
-    options = options || {
-        limit: 10,
-        maxLimit: 50
-    };
+  options = options || {
+    limit: 10,
+    maxLimit: 50
+  };
 
-    //return middleware stack
-    return [
-        expressPaginate.middleware(options.limit, options.maxLimit),
-        prepareQuery(options)
-    ];
+  //return middleware stack
+  return [
+    expressPaginate.middleware(options.limit, options.maxLimit),
+    prepareQuery(options)
+  ];
+
 };
 
 //export mongoose plugin
 exports.plugin = function(schema, options) {
-    //normalize options
-    options = options || {};
+  //normalize options
+  options = options || {};
 
-    /**
-     * @description build mongoose query from request.mquery object
-     * @param  {Request} request valid express HTTP request
-     * @return {Query}         valid mongoose query instance
-     */
-    schema.statics.mquery = function(request) {
-        var query = options.query || this.find();
-        if (request.mquery) {
-            return buildQuery(options)(query, request.mquery);
-        } else {
-            return query;
-        }
-    };
+  /**
+   * @description build mongoose query from request.mquery object
+   * @param  {Request} request valid express HTTP request
+   * @return {Query}         valid mongoose query instance
+   */
+  schema.statics.mquery = function(request) {
+    var query = options.query || this.find();
+    if (request.mquery) {
+      return buildQuery(options)(query, request.mquery);
+    } else {
+      return query;
+    }
+  };
 
 
-    /**
-     * @description build mongoose paginate query from request.mquery object
-     * @param  {Request|Object}   request valid express HTTP request or valid
-     *                                    mongodb query object
-     * @param  {Function} [done]   callback to invoke on success or error, if not
-     *                             provided a promise will be returned
-     */
-    schema.statics.paginate = function(request, done) {
+  /**
+   * @description build mongoose paginate query from request.mquery object
+   * @param  {Request|Object}   request valid express HTTP request or valid
+   *                                    mongodb query object
+   * @param  {Function} [done]   callback to invoke on success or error, if not
+   *                             provided a promise will be returned
+   */
+  schema.statics.paginate = function(request, done) {
 
-        //obtain mongoose query object
-        var query = request.mquery ? request.mquery : request;
+    //obtain mongoose query object
+    var query = request.mquery ? request.mquery : request;
 
-        //extend mquery if exist
-        if (request.mquery) {
-            //pick page and limit from request query params
-            var pageAndLimit = _.pick(request.query, ['page', 'limit']);
+    //extend mquery if exist
+    if (request.mquery) {
+      //pick page and limit from request query params
+      var pageAndLimit = _.pick(request.query, ['page', 'limit']);
 
-            //extend query with page and limit request params
-            query =
-                _.merge({}, query, pageAndLimit);
-        }
+      //extend query with page and limit request params
+      query =
+        _.merge({}, query, pageAndLimit);
+    }
 
-        //execute query
-        if (_.isFunction(done)) {
-            return mongoosePaginate.call(this, query, done);
-        } else {
-            return mongoosePaginate.call(this, query);
-        }
+    //execute query
+    if (_.isFunction(done)) {
+      return mongoosePaginate.call(this, query, done);
+    } else {
+      return mongoosePaginate.call(this, query);
+    }
 
-    };
+  };
 
 };
