@@ -31,8 +31,11 @@ function wipe(done) {
     if (error && error.message !== 'ns not found') {
       done(error);
     } else {
+
       //drop database
-      mongoose.connection.db.dropDatabase();
+      if (mongoose.connection && mongoose.connection.db) {
+        mongoose.connection.db.dropDatabase();
+      }
 
       done(null);
     }
