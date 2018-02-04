@@ -34,56 +34,20 @@ Example
 - For projection specified using object ,it must be a valid json
 
 
-### A partial string match
+## Sorting - Result Ordering
+Parse orders(`sort`) from http query parameters and construct 
+[sort](http://mongoosejs.com/docs/api.html#query_Query-sort) query options.
 
+Example
 ```
-https://api.example.com/users?username=*steve*
+ /users?sort=name
+ /users?sort=name,email
+ /users?sort=-name
+ /users?sort=-name,-email
+ /users?sort={"name":1}
+ /users?sort={"name":1, "email":1}
+ /users?sort={"name":0}
+ /users?sort={"name":0, "email": 0}
+ /users?sort={"name":'asc', "email": 'desc'}
+ /users?sort={"name":'ascending', "email": 'descending'}
 ```
-
-### A range of values
-
-```
-https://api.example.com/users?age=18...25
-```
-
-### Greater than + Lesser than (or equal to)
-
-We use familiar operators - `>`, `<`, `>=`, `<=` (shown URI-encoded)
-
-```
-https://api.example.com/users?age=%3E18
-https://api.example.com/users?age=%3C25
-https://api.example.com/users?age=%3E%3D18
-https://api.example.com/users?age=%3C%3D25
-```
-
-### Sorting by a value
-
-Default is ascending, negating with a `-` sets to descending.
-
-```
-https://api.example.com/users?order=createdAt
-https://api.example.com/users?order=-createdAt
-```
-
-### Amount of results
-
-A `limit=0` sets no limit.
-
-```
-https://api.example.com/users?limit=5
-https://api.example.com/users?limit=0
-```
-
-### Pagination
-
-```
-https://api.example.com/users?page=1&perPage=20
-```
-
-### Negation
-
-It should be possible to search for the opposite of a query by adding the `!` operator to it to negate it like so:
-
-```
-https://api.example.com/users?status=!deleted
