@@ -52,7 +52,7 @@ Example
  /users?sort={"name":'ascending', "email": 'descending'}
 ```
 
-## Populate - Load related resources
+## Populate - Load Relations(or Related Resources)
 Parse `populate` or `includes` from http query parameters and construct 
 [populate](http://mongoosejs.com/docs/api.html#query_Query-populate) query options.
 
