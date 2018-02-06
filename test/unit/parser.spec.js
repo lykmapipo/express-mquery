@@ -471,6 +471,44 @@ describe.only('parse', function() {
 
       });
 
+    it('should parse array based population', function(done) {
+      const _populate = [{ path: 'customer' }, { path: 'items' }];
+      const query = { populate: _populate };
+
+      parser
+        .populate(query, function(error, populate) {
+          expect(error).to.not.exist;
+          expect(populate).to.exist;
+          expect(populate).to.eql(_populate);
+          done(error, populate);
+        });
+
+    });
+
+
+    it('should parse array based population with selection',
+      function(done) {
+        const _populate = [
+          { path: 'customer', select: { name: 1 } },
+          { path: 'items', select: { name: 1, price: 0 } }
+        ];
+        const query = {
+          populate: [
+            { path: 'customer', select: 'name' },
+            { path: 'items', select: 'name,-price' }
+          ]
+        };
+
+        parser
+          .populate(query, function(error, populate) {
+            expect(error).to.not.exist;
+            expect(populate).to.exist;
+            expect(populate).to.eql(_populate);
+            done(error, populate);
+          });
+
+      });
+
   });
 
 
