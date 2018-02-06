@@ -61,6 +61,7 @@ Example
 /invoices?populate=customer
 /invoices?populate=customer,items
 /invoices?populate=customer.name,items.name,items.price
+/invoices?populate=customer.name,-items.price
 /invoices?populate={"path":"customer", "select":"name,price" }
 /invoices?populate={"path":"customer", "select":{"name":1, "price":1} }
 /invoices?populate=[{"path":"customer"}, {"path":"items"}]
@@ -68,11 +69,11 @@ Example
 
 or
 
-/invoices?includes=customer
-/invoices?includes=customer,items
-/invoices?includes=customer.name,items.name,items.price
-/invoices?includes={"path":"customer", "select":"name,price" }
-/invoices?includes={"path":"customer", "select":{"name":1, "price":1} }
-/invoices?includes=[{"path":"customer"}, {"path":"items"}]
-/invoices?includes=[{"path":"customer", "select":"name"}, {"path":"items", "select":{"name": 1, "price": 1}}]
+/invoices?include=customer
+/invoices?include=customer,items
+/invoices?include=customer.name,items.name,items.price
+/invoices?include={"path":"customer", "select":"name,price" }
+/invoices?include={"path":"customer", "select":{"name":1, "price":1} }
+/invoices?include=[{"path":"customer"}, {"path":"items"}]
+/invoices?include=[{"path":"customer", "select":"name"}, {"path":"items", "select":{"name": 1, "price": 1}}]
 ```
