@@ -51,3 +51,28 @@ Example
  /users?sort={"name":'asc', "email": 'desc'}
  /users?sort={"name":'ascending', "email": 'descending'}
 ```
+
+## Populate - Load related resources
+Parse `populate` or `includes` from http query parameters and construct 
+[populate](http://mongoosejs.com/docs/api.html#query_Query-populate) query options.
+
+Example
+```
+/invoices?populate=customer
+/invoices?populate=customer,items
+/invoices?populate=customer.name,items.name,items.price
+/invoices?populate={"path":"customer", "select":"name,price" }
+/invoices?populate={"path":"customer", "select":{"name":1, "price":1} }
+/invoices?populate=[{"path":"customer"}, {"path":"items"}]
+/invoices?populate=[{"path":"customer", "select":"name"}, {"path":"items", "select":{"name": 1, "price": 1}}]
+
+or
+
+/invoices?includes=customer
+/invoices?includes=customer,items
+/invoices?includes=customer.name,items.name,items.price
+/invoices?includes={"path":"customer", "select":"name,price" }
+/invoices?includes={"path":"customer", "select":{"name":1, "price":1} }
+/invoices?includes=[{"path":"customer"}, {"path":"items"}]
+/invoices?includes=[{"path":"customer", "select":"name"}, {"path":"items", "select":{"name": 1, "price": 1}}]
+```
