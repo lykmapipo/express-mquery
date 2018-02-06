@@ -72,6 +72,7 @@ or
 /invoices?include=customer
 /invoices?include=customer,items
 /invoices?include=customer.name,items.name,items.price
+/invoices?include=customer.name,-items.price
 /invoices?include={"path":"customer", "select":"name,price" }
 /invoices?include={"path":"customer", "select":{"name":1, "price":1} }
 /invoices?include=[{"path":"customer"}, {"path":"items"}]

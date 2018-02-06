@@ -421,6 +421,56 @@ describe.only('parse', function() {
 
       });
 
+    it('should parse object based population', function(done) {
+      const _populate = { path: 'customer' };
+      const query = { populate: _populate };
+
+      parser
+        .populate(query, function(error, populate) {
+          expect(error).to.not.exist;
+          expect(populate).to.exist;
+          expect(populate[0]).to.eql(_populate);
+          done(error, populate);
+        });
+
+    });
+
+    it('should parse object based population with string select',
+      function(done) {
+        const _populate = { path: 'customer', select: { name: 1 } };
+        const query = { populate: { path: 'customer', select: 'name' } };
+
+        parser
+          .populate(query, function(error, populate) {
+            expect(error).to.not.exist;
+            expect(populate).to.exist;
+            expect(populate[0]).to.eql(_populate);
+            done(error, populate);
+          });
+
+      });
+
+    it('should parse object based population with string select',
+      function(done) {
+        const _populate = {
+          path: 'customer',
+          select: {
+            name: 1,
+            price: 0
+          }
+        };
+        const query = { populate: { path: 'customer', select: 'name,-price' } };
+
+        parser
+          .populate(query, function(error, populate) {
+            expect(error).to.not.exist;
+            expect(populate).to.exist;
+            expect(populate[0]).to.eql(_populate);
+            done(error, populate);
+          });
+
+      });
+
   });
 
 
