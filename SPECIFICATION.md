@@ -2,10 +2,11 @@
 
 Here we work at merge common recommendation from
 
+- [MongoDB Query](https://docs.mongodb.com/manual/reference/operator/query/)
 - [JSON API Recommendations](http://jsonapi.org/recommendations/)
 - [JSONAPI Resources Querystring Examples](https://github.com/cerebris/jsonapi-resources/wiki/JSONAPI::Resources-Querystring-Examples)
 - [JSON API Examples](http://jsonapi.org/examples/)
-- [MongoDB Query](https://docs.mongodb.com/manual/reference/operator/query/)
+- [JSON API propose filtering strategy](http://discuss.jsonapi.org/t/share-propose-a-filtering-strategy/257)
 - [wordpress rest-api](https://developer.wordpress.org/rest-api/)
 - [apigee](https://docs-apis.apigee.io/files/Web-design-the-missing-link-ebook-2016-11.pdf)
 - etc
