@@ -2,8 +2,12 @@
 
 Here we work at merge common recommendation from
 
-- [JSON API Recommendaions](http://jsonapi.org/recommendations/)
+- [JSON API Recommendations](http://jsonapi.org/recommendations/)
+- [JSONAPI Resources Querystring Examples](https://github.com/cerebris/jsonapi-resources/wiki/JSONAPI::Resources-Querystring-Examples)
+- [JSON API Examples](http://jsonapi.org/examples/)
 - [MongoDB Query](https://docs.mongodb.com/manual/reference/operator/query/)
+- [wordpress rest-api](https://developer.wordpress.org/rest-api/)
+- [apigee](https://docs-apis.apigee.io/files/Web-design-the-missing-link-ebook-2016-11.pdf)
 - etc
 
 to have a consistent approach to parse query parameters and transalate them
@@ -78,3 +82,35 @@ or
 /invoices?include=[{"path":"customer"}, {"path":"items"}]
 /invoices?include=[{"path":"customer", "select":"name"}, {"path":"items", "select":{"name": 1, "price": 1}}]
 ```
+
+## Pagination
+
+### Offset Pagination
+**Limiting Returned Resources:**
+ - **`/users?page[limit]={resource_count}`**
+ - `{resource_count}` = number of resources you want returned
+ - e.g. `/users?page[limit]=5` will return the first 5 `user` resources
+
+**Offsetting Returned Resources:**
+ - **`/users?page[offset]={resource_offset}`**
+ - `{resource_offset}` = the number of records to offset by prior to returning resources
+ - e.g. `/users?page[offset]=10` will skip the first 10 `user` resources in the collection
+
+**Combining Limiting/Offsetting:**
+ - **`/users?page[limit]={resource_count}&page[offset]={resource_offset}`**
+ - e.g. `/users?page[limit]=5&page[offset]=10` will skip `user` resources 0-10 and return resources 11-15
+
+### Paged Pagination
+**Paging Returned Resources:**
+ - **`/users?page[number]={page_number}`**
+ - `{page_number}` = the page number of the resources to be returned (this is "one-based", i.e. the first page is `1`, not `0`)
+ - e.g. `/users?page[number]=7` will skip the first 7 *pages* of `user` resources in the collection, and return the 8th page
+
+**Setting Page Size:**
+ - **`/users?page[size]={page_size}`**
+ - `{page_size}` = the number of resources to be returned per page
+ - e.g. `/users?page[size]=25` will return 25 `user` resources on a single page
+
+**Combining Paging/Page Sizing:**
+ - **`/users?page[size]={page_size}&page[number]={page_number}`**
+ - e.g. `/users?page[size]=25&page[number]=5` will skip `user` resources 0-100 and return resources 101-125
