@@ -1,71 +1,72 @@
 {
-    "name": "express-mquery",
-    "version": "0.2.2",
-    "description": "Expose mongoose query API through HTTP request",
-    "main": "index.js",
-    "scripts": {
-        "test": "grunt test"
-    },
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/lykmapipo/express-mquery.git"
-    },
-    "author": "Lally Elias",
-    "license": "MIT",
-    "bugs": {
-        "url": "https://github.com/lykmapipo/express-mquery/issues"
-    },
-    "homepage": "https://github.com/lykmapipo/express-mquery",
-    "contributors": [
-        {
-            "name": "lykmapipo",
-            "github": "https://github.com/lykmapipo"
-        }
-    ],
-    "keywords": [
-        "mongoose",
-        "mongoose-plugin",
-        "query",
-        "express",
-        "connect",
-        "http",
-        "blueprint",
-        "api",
-        "rest",
-        "search",
-        "filter",
-        "find",
-        "sort",
-        "skip",
-        "distinct",
-        "limit",
-        "query",
-        "paginate",
-        "middleware",
-        "mongodb"
-    ],
-    "dependencies": {
-        "async": "^2.6.0",
-        "auto-parse": "^1.3.0",
-        "bluebird": "^3.5.1",
-        "express-paginate": "^0.3.0",
-        "lodash": "^4.17.5",
-        "traverse": "^0.6.6"
-    },
-    "devDependencies": {
-        "async": "^2.6.0",
-        "body-parser": "^1.18.2",
-        "chai": "^4.1.2",
-        "express": "^4.16.2",
-        "grunt": "^1.0.1",
-        "grunt-contrib-jshint": "^1.1.0",
-        "grunt-contrib-watch": "^1.0.0",
-        "grunt-mocha-test": "^0.13.3",
-        "jshint-stylish": "^2.2.1",
-        "mocha": "^5.0.0",
-        "mongoose": "^5.0.3",
-        "sinon": "^4.2.2",
-        "sinon-chai": "^2.14.0",
-        "supertest": "^3.0.0"
+  "name": "express-mquery",
+  "version": "0.2.2",
+  "description": "Expose mongoose query API through HTTP request",
+  "main": "index.js",
+  "scripts": {
+    "test": "grunt test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/lykmapipo/express-mquery.git"
+  },
+  "author": "Lally Elias",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/lykmapipo/express-mquery/issues"
+  },
+  "homepage": "https://github.com/lykmapipo/express-mquery",
+  "contributors": [
+    {
+      "name": "lykmapipo",
+      "github": "https://github.com/lykmapipo"
     }
+  ],
+  "keywords": [
+    "mongoose",
+    "mongoose-plugin",
+    "query",
+    "express",
+    "connect",
+    "http",
+    "blueprint",
+    "api",
+    "rest",
+    "search",
+    "filter",
+    "find",
+    "sort",
+    "skip",
+    "distinct",
+    "limit",
+    "query",
+    "paginate",
+    "middleware",
+    "mongodb",
+    "mquery"
+  ],
+  "dependencies": {
+    "async": "^2.6.0",
+    "auto-parse": "^1.3.0",
+    "bluebird": "^3.5.1",
+    "express-paginate": "^0.3.0",
+    "lodash": "^4.17.5",
+    "traverse": "^0.6.6"
+  },
+  "devDependencies": {
+    "async": "^2.6.0",
+    "body-parser": "^1.18.2",
+    "chai": "^4.1.2",
+    "express": "^4.16.2",
+    "grunt": "^1.0.1",
+    "grunt-contrib-jshint": "^1.1.0",
+    "grunt-contrib-watch": "^1.0.0",
+    "grunt-mocha-test": "^0.13.3",
+    "jshint-stylish": "^2.2.1",
+    "mocha": "^5.0.0",
+    "mongoose": "^5.0.3",
+    "sinon": "^4.2.2",
+    "sinon-chai": "^2.14.0",
+    "supertest": "^3.0.0"
+  }
 }
