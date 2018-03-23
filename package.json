@@ -16,12 +16,10 @@
     "url": "https://github.com/lykmapipo/express-mquery/issues"
   },
   "homepage": "https://github.com/lykmapipo/express-mquery",
-  "contributors": [
-    {
-      "name": "lykmapipo",
-      "github": "https://github.com/lykmapipo"
-    }
-  ],
+  "contributors": [{
+    "name": "lykmapipo",
+    "github": "https://github.com/lykmapipo"
+  }],
   "keywords": [
     "mongoose",
     "mongoose-plugin",

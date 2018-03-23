@@ -28,7 +28,7 @@ describe('parse', function() {
 
   });
 
-  describe('select', function() {
+  describe.only('select', function() {
 
     it('should be a function', function() {
       expect(parser.select).to.exist;
