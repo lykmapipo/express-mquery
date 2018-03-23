@@ -5,11 +5,7 @@
 const path = require('path');
 const chai = require('chai');
 const expect = chai.expect;
-
-
-//local imports
 const parser = require(path.join(__dirname, '..', '..', 'lib', 'parser'));
-
 
 describe('paginate', function() {
 

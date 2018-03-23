@@ -7,9 +7,6 @@ const chai = require('chai');
 const express = require('express');
 const request = require('supertest');
 const expect = chai.expect;
-
-
-//local imports
 const parser = require(path.join(__dirname, '..', '..', 'lib', 'parser'));
 
 describe.only('select', function() {
@@ -284,6 +281,8 @@ describe.only('select', function() {
         });
     });
 
+    it('should check populate & select');
+    //?includes=profile&fields[profile]=name
 
   });
 
