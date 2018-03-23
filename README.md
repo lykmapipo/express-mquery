@@ -111,23 +111,27 @@ Only overrides `maximum limit option set by the plugin` if the queried limit is 
 GET /customers?limit=10
 ```
 
-### Query
-Supports all operators `($regex, $gt, $gte, $lt, $lte, $ne, etc.) as well as shorthands: ~, >, >=, <, <=, !=`
+### Query or Filters
+Supports all [mongodb operators](https://docs.mongodb.com/manual/reference/operator/query/) `($regex, $gt, $gte, $lt, $lte, $ne, etc.)`
 
 ```js
 GET /customers?query={"name":"Bob"}
-GET /customers?query={"name":{"$regex":"^(Bob)"}}
-GET /customers?query={"name":"~^(Bob)"}
+GET /customers?query={"name":{"$regex":"/Bo$/"}}
 GET /customers?query={"age":{"$gt":12}}
-GET /customers?query={"age":">12"}
 GET /customers?query={"age":{"$gte":12}}
-GET /customers?query={"age":">=12"}
 GET /customers?query={"age":{"$lt":12}}
-GET /customers?query={"age":"<12"}
 GET /customers?query={"age":{"$lte":12}}
-GET /customers?query={"age":"<=12"}
 GET /customers?query={"age":{"$ne":12}}
-GET /customers?query={"age":"!=12"}
+
+or
+
+GET /customers?filter[name]=Bob
+GET /customers?filter[name]={"$regex":"/Bo$/"}
+GET /customers?filter[age]={"$gt":12}
+GET /customers?filter[age]={"$gte":12}
+GET /customers?filter[age]={"$lt":12}
+GET /customers?filter[age]={"$lte":12}
+GET /customers?filter[age]={"$ne":12}
 ```
 
 ### Populate

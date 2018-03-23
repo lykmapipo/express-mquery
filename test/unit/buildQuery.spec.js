@@ -1,17 +1,17 @@
 'use strict';
 
 //dependencies
-var path = require('path');
-var _ = require('lodash');
-var chai = require('chai');
-var sinon = require('sinon');
-var sinonChai = require('sinon-chai');
-var expect = chai.expect;
+const path = require('path');
+const _ = require('lodash');
+const chai = require('chai');
+const sinon = require('sinon');
+const sinonChai = require('sinon-chai');
+const expect = chai.expect;
 chai.use(sinonChai);
-var buildQuery = require(path.join(__dirname, '..', '..', 'lib', 'buildQuery'));
+const buildQuery = require(path.join(__dirname, '..', '..', 'lib', 'buildQuery'));
 
 describe('buildQuery', function() {
-  var query;
+  let query;
 
   beforeEach(function() {
 
@@ -28,8 +28,8 @@ describe('buildQuery', function() {
   });
 
   afterEach(function() {
-    for (var key in query) {
-      var ret = query[key];
+    for (const key in query) {
+      const ret = query[key];
       if (ret && ret.restore && _.isFunction(ret.restore)) {
         ret.restore();
       }
@@ -37,9 +37,9 @@ describe('buildQuery', function() {
   });
 
   it('does not call any methods and returns a query object', function() {
-    var result = buildQuery({})(query);
+    const result = buildQuery({})(query);
 
-    for (var key in query) {
+    for (const key in query) {
       expect(query[key]).to.have.not.been.called;
     }
 
@@ -48,11 +48,11 @@ describe('buildQuery', function() {
 
   describe('distinct', function() {
     it('calls distinct and returns a query object', function() {
-      var queryOptions = {
+      const queryOptions = {
         distinct: 'foo'
       };
 
-      var result = buildQuery({})(query, queryOptions);
+      const result = buildQuery({})(query, queryOptions);
 
       expect(query.distinct).to.have.been.calledOnce;
       expect(query.distinct).to.have.been.calledWithExactly(
@@ -70,15 +70,15 @@ describe('buildQuery', function() {
 
   describe('limit', function() {
     it('calls limit and returns a query object', function() {
-      var queryOptions = {
-        limit: '1'
+      const queryOptions = {
+        paginate: { limit: '1' }
       };
 
-      var result = buildQuery({})(query, queryOptions);
+      const result = buildQuery({})(query, queryOptions);
 
       expect(query.limit).to.have.been.calledOnce;
       expect(query.limit).to.have.been.calledWithExactly(
-        queryOptions.limit);
+        queryOptions.paginate.limit);
 
       expect(query.where).to.have.not.been.called;
       expect(query.skip).to.have.not.been.called;
@@ -92,15 +92,15 @@ describe('buildQuery', function() {
     });
 
     it('calls limit and returns a query object', function() {
-      var options = {
+      const options = {
         limit: 1
       };
 
-      var queryOptions = {
-        limit: '2'
+      const queryOptions = {
+        paginate: { limit: '2' }
       };
 
-      var result = buildQuery(options)(query, queryOptions);
+      const result = buildQuery(options)(query, queryOptions);
 
       expect(query.limit).to.have.been.calledOnce;
       expect(query.limit).to.have.been.calledWithExactly(options.limit);
@@ -118,15 +118,15 @@ describe('buildQuery', function() {
     it(
       'does not call limit on `count()` query and returns a query object',
       function() {
-        var queryOptions = {
-          limit: '2'
+        const queryOptions = {
+          paginate: { limit: '2' }
         };
 
         query.op = 'count';
-        var result = buildQuery({})(query, queryOptions);
+        const result = buildQuery({})(query, queryOptions);
         delete query.op;
 
-        for (var key in query) {
+        for (const key in query) {
           expect(query[key]).to.have.not.been.called;
         }
 
@@ -136,19 +136,19 @@ describe('buildQuery', function() {
     it(
       'does not call limit on `count()` query and returns a query object',
       function() {
-        var options = {
+        const options = {
           limit: 1
         };
 
-        var queryOptions = {
-          limit: '2'
+        const queryOptions = {
+          paginate: { limit: '2' }
         };
 
         query.op = 'count';
-        var result = buildQuery(options)(query, queryOptions);
+        const result = buildQuery(options)(query, queryOptions);
         delete query.op;
 
-        for (var key in query) {
+        for (const key in query) {
           expect(query[key]).to.have.not.been.called;
         }
 
@@ -159,7 +159,7 @@ describe('buildQuery', function() {
   describe('populate', function() {
     it('accepts an object wrapped in an array to populate a path',
       function() {
-        var queryOptions = {
+        const queryOptions = {
           populate: [{
             path: 'foo.bar',
             select: 'baz',
@@ -172,7 +172,7 @@ describe('buildQuery', function() {
           }]
         };
 
-        var result = buildQuery({})(query, queryOptions);
+        const result = buildQuery({})(query, queryOptions);
 
         expect(query.populate).to.have.been.calledOnce;
         expect(query.populate).to.have.been.calledWithExactly(
@@ -190,14 +190,14 @@ describe('buildQuery', function() {
 
   describe('select', function() {
     it('accepts an object', function() {
-      var queryOptions = {
+      const queryOptions = {
         select: {
           foo: 1,
           bar: 0
         }
       };
 
-      var result = buildQuery({})(query, queryOptions);
+      const result = buildQuery({})(query, queryOptions);
 
       expect(query.select).to.have.been.calledOnce;
       expect(query.select).to.have.been.calledWithExactly(
@@ -215,15 +215,15 @@ describe('buildQuery', function() {
 
   describe('skip', function() {
     it('calls skip and returns a query object', function() {
-      var queryOptions = {
-        skip: '1'
+      const queryOptions = {
+        paginate: { skip: '1' }
       };
 
-      var result = buildQuery({})(query, queryOptions);
+      const result = buildQuery({})(query, queryOptions);
 
       expect(query.skip).to.have.been.calledOnce;
       expect(query.skip).to.have.been.calledWithExactly(
-        queryOptions.skip);
+        queryOptions.paginate.skip);
       expect(query.where).to.have.not.been.called;
       expect(query.limit).to.have.not.been.called;
       expect(query.sort).to.have.not.been.called;
@@ -237,11 +237,11 @@ describe('buildQuery', function() {
 
   describe('sort', function() {
     it('calls sort and returns a query object', function() {
-      var queryOptions = {
+      const queryOptions = {
         sort: 'foo'
       };
 
-      var result = buildQuery({})(query, queryOptions);
+      const result = buildQuery({})(query, queryOptions);
 
       expect(query.sort).to.have.been.calledOnce;
       expect(query.sort).to.have.been.calledWithExactly(
@@ -259,15 +259,15 @@ describe('buildQuery', function() {
 
   describe('where', function() {
     it('calls where and returns a query object', function() {
-      var queryOptions = {
-        query: 'foo'
+      const queryOptions = {
+        filter: { foo: 'bar' }
       };
 
-      var result = buildQuery({})(query, queryOptions);
+      const result = buildQuery({})(query, queryOptions);
 
       expect(query.where).to.have.been.calledOnce;
       expect(query.where).to.have.been.calledWithExactly(
-        queryOptions.query);
+        queryOptions.filter);
       expect(query.skip).to.have.not.been.called;
       expect(query.limit).to.have.not.been.called;
       expect(query.sort).to.have.not.been.called;

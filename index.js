@@ -1,12 +1,12 @@
 'use strict';
 
 //dependencies
-var path = require('path');
-var _ = require('lodash');
-var buildQuery = require(path.join(__dirname, 'lib', 'buildQuery'));
-var prepareQuery = require(path.join(__dirname, 'lib', 'prepareQuery'));
-var mongoosePaginate = require(path.join(__dirname, 'lib', 'mongoosePaginate'));
-var expressPaginate = require('express-paginate');
+const path = require('path');
+const _ = require('lodash');
+const buildQuery = require(path.join(__dirname, 'lib', 'buildQuery'));
+const parse = require(path.join(__dirname, 'lib', 'parser')).parse;
+const mongoosePaginate = require(path.join(__dirname, 'lib', 'mongoosePaginate'));
+const expressPaginate = require('express-paginate');
 
 //export express middleware
 exports.middleware = function(options) {
@@ -18,7 +18,16 @@ exports.middleware = function(options) {
   //return middleware stack
   return [
     expressPaginate.middleware(options.limit, options.maxLimit),
-    prepareQuery(options)
+    function(request, response, next) {
+      parse(request.query, function(error, mquery) {
+        if (error) {
+          next(error);
+        } else {
+          request.mquery = mquery;
+          next();
+        }
+      });
+    }
   ];
 
 };
@@ -34,7 +43,7 @@ exports.plugin = function(schema, options) {
    * @return {Query}         valid mongoose query instance
    */
   schema.statics.mquery = function(request) {
-    var query = options.query || this.find();
+    const query = options.query || this.find();
     if (request.mquery) {
       return buildQuery(options)(query, request.mquery);
     } else {
@@ -53,12 +62,12 @@ exports.plugin = function(schema, options) {
   schema.statics.paginate = function(request, done) {
 
     //obtain mongoose query object
-    var query = request.mquery ? request.mquery : request;
+    let query = request.mquery ? request.mquery : request;
 
     //extend mquery if exist
     if (request.mquery) {
       //pick page and limit from request query params
-      var pageAndLimit = _.pick(request.query, ['page', 'limit']);
+      const pageAndLimit = _.pick(request.query, ['page', 'limit']);
 
       //extend query with page and limit request params
       query =

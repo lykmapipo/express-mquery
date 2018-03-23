@@ -47,7 +47,7 @@
   ],
   "dependencies": {
     "async": "^2.6.0",
-    "auto-parse": "^1.3.0",
+    "auto-parse": "^1.5.1",
     "bluebird": "^3.5.1",
     "express-paginate": "^0.3.0",
     "lodash": "^4.17.5",
@@ -57,16 +57,16 @@
     "async": "^2.6.0",
     "body-parser": "^1.18.2",
     "chai": "^4.1.2",
-    "express": "^4.16.2",
-    "grunt": "^1.0.1",
+    "express": "^4.16.3",
+    "grunt": "^1.0.2",
     "grunt-contrib-jshint": "^1.1.0",
     "grunt-contrib-watch": "^1.0.0",
     "grunt-mocha-test": "^0.13.3",
     "jshint-stylish": "^2.2.1",
-    "mocha": "^5.0.0",
-    "mongoose": "^5.0.3",
-    "sinon": "^4.2.2",
-    "sinon-chai": "^2.14.0",
+    "mocha": "^5.0.5",
+    "mongoose": "^5.0.11",
+    "sinon": "^4.4.8",
+    "sinon-chai": "^3.0.0",
     "supertest": "^3.0.0"
   }
 }

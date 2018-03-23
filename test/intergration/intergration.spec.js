@@ -27,7 +27,9 @@ describe('express-mquery', function() {
 
   before(function() {
     app.get('/customers', function(request, response) {
+
       var Customer = mongoose.model('Customer');
+      console.log(JSON.stringify(request.mquery));
 
       Customer
         .mquery(request)
@@ -219,7 +221,7 @@ describe('express-mquery', function() {
         });
     });
 
-    it(
+    it.only(
       'GET /customers?populate=favorites.purchase.item 200 - nested field',
       function(done) {
         request(app)

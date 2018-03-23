@@ -9,6 +9,7 @@ Here we work at merge common recommendation from
 - [JSON API propose filtering strategy](http://discuss.jsonapi.org/t/share-propose-a-filtering-strategy/257)
 - [wordpress rest-api](https://developer.wordpress.org/rest-api/)
 - [apigee](https://docs-apis.apigee.io/files/Web-design-the-missing-link-ebook-2016-11.pdf)
+- [JSON API Example](http://jsonapi.org/examples/)
 - etc
 
 to have a consistent approach to parse query parameters and transalate them
@@ -16,7 +17,8 @@ to actual [query builder](http://mongoosejs.com/docs/api.html#Query) options.
 
 ## Projection - Select Specific Fields
 Parse projection(`select or fields`) from http query parameters and construct 
-[select](http://mongoosejs.com/docs/api.html#query_Query-select) query options.
+[select](http://mongoosejs.com/docs/api.html#query_Query-select) query options 
+to satisfy [mongodb projection specification](https://docs.mongodb.com/manual/tutorial/project-fields-from-query-results/)
 
 Example
 ```
@@ -82,6 +84,29 @@ or
 /invoices?include={"path":"customer", "select":{"name":1, "price":1} }
 /invoices?include=[{"path":"customer"}, {"path":"items"}]
 /invoices?include=[{"path":"customer", "select":"name"}, {"path":"items", "select":{"name": 1, "price": 1}}]
+```
+
+### Filtering
+Supports all [mongodb operators](https://docs.mongodb.com/manual/reference/operator/query/) `($regex, $gt, $gte, $lt, $lte, $ne, etc.)`
+
+```js
+GET /customers?query={"name":"Bob"}
+GET /customers?query={"name":{"$regex":"/Bo$/"}}
+GET /customers?query={"age":{"$gt":12}}
+GET /customers?query={"age":{"$gte":12}}
+GET /customers?query={"age":{"$lt":12}}
+GET /customers?query={"age":{"$lte":12}}
+GET /customers?query={"age":{"$ne":12}}
+
+or
+
+GET /customers?filter[name]=Bob
+GET /customers?filter[name]={"$regex":"/Bo$/"}
+GET /customers?filter[age]={"$gt":12}
+GET /customers?filter[age]={"$gte":12}
+GET /customers?filter[age]={"$lt":12}
+GET /customers?filter[age]={"$lte":12}
+GET /customers?filter[age]={"$ne":12}
 ```
 
 ## Pagination
