@@ -3,6 +3,7 @@
 
 //global imports
 const path = require('path');
+const _ = require('lodash');
 const chai = require('chai');
 const expect = chai.expect;
 const parser = require(path.join(__dirname, '..', '..', 'lib', 'parser'));

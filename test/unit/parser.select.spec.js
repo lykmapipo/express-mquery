@@ -9,7 +9,7 @@ const request = require('supertest');
 const expect = chai.expect;
 const parser = require(path.join(__dirname, '..', '..', 'lib', 'parser'));
 
-describe.only('select', function() {
+describe('select', function() {
 
   it('should be a function', function() {
     expect(parser.select).to.exist;
@@ -156,14 +156,14 @@ describe.only('select', function() {
 
     const app = express();
     app.use('/select', function(request, response) {
-      console.log('http request query: ', request.query);
-      parser.select(request.query, function(error, projections) {
-        if (error) {
-          throw error;
-        } else {
-          response.json(projections);
-        }
-      });
+      parser
+        .select(request.query, function(error, projections) {
+          if (error) {
+            throw error;
+          } else {
+            response.json(projections);
+          }
+        });
     });
 
     it('should parse json based projection', function(done) {
@@ -272,6 +272,34 @@ describe.only('select', function() {
       request(app)
         .get('/select')
         .query(query)
+        .expect(200, function(error, response) {
+          expect(error).to.not.exist;
+          const projection = response.body;
+          expect(projection).to.exist;
+          expect(projection).to.eql(select);
+          done(error, response);
+        });
+    });
+
+    it('should parse string based projection', function(done) {
+      const select = { name: 1, email: 1 };
+
+      request(app)
+        .get('/select?select[name]=1&select[email]=1')
+        .expect(200, function(error, response) {
+          expect(error).to.not.exist;
+          const projection = response.body;
+          expect(projection).to.exist;
+          expect(projection).to.eql(select);
+          done(error, response);
+        });
+    });
+
+    it('should parse string based projection', function(done) {
+      const select = { name: 1, email: 1 };
+
+      request(app)
+        .get('/select?fields[name]=1&fields[email]=1')
         .expect(200, function(error, response) {
           expect(error).to.not.exist;
           const projection = response.body;
