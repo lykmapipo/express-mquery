@@ -12,7 +12,7 @@ const expect = chai.expect;
 const parser = require(path.join(__dirname, '..', '..', 'lib', 'parser'));
 
 
-describe('parse', function() {
+describe.only('parse', function() {
 
   describe('structure', function() {
 
