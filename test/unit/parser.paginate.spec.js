@@ -8,11 +8,13 @@ const chai = require('chai');
 const expect = chai.expect;
 const parser = require(path.join(__dirname, '..', '..', 'lib', 'parser'));
 
-describe('paginate', function() {
+describe.only('paginate', function() {
 
   it('should be a function', function() {
     expect(parser.paginate).to.exist;
     expect(parser.paginate).to.be.a('function');
+    expect(parser.paginate.name).to.be.equal('paginate');
+    expect(parser.paginate.length).to.be.equal(2);
   });
 
   describe('limit', function() {
@@ -236,6 +238,23 @@ describe('paginate', function() {
 
     });
 
+    it('should parse skip from page', function(done) {
+
+      const query = { page: 5 };
+
+      parser
+        .paginate(JSON.stringify(query), function(error,
+          paginate) {
+          expect(error).to.not.exist;
+          expect(paginate).to.exist;
+          expect(paginate.skip).to.exist;
+          expect(paginate.page).to.be.eql(query.page);
+          expect(paginate.skip).to.be.eql(40);
+          done(error, paginate);
+        });
+
+    });
+
   });
 
   describe('page', function() {
@@ -273,7 +292,7 @@ describe('paginate', function() {
 
     });
 
-    it('should parse', function(done) {
+    it('should parse page number and page size', function(done) {
 
       const query = { number: 10, size: 10 };
 
@@ -286,6 +305,25 @@ describe('paginate', function() {
           expect(paginate.limit).to.exist;
           expect(paginate.page).to.be.eql(query.number);
           expect(paginate.limit).to.be.eql(query.size);
+          done(error, paginate);
+        });
+
+    });
+
+    it('should parse page and skip', function(done) {
+
+      const query = { page: 1, skip: 1000 };
+
+      parser
+        .paginate(JSON.stringify(query), function(error,
+          paginate) {
+          expect(error).to.not.exist;
+          expect(paginate).to.exist;
+          expect(paginate.page).to.exist;
+          expect(paginate.limit).to.exist;
+          expect(paginate.page).to.be.eql(query.page);
+          expect(paginate.skip).to.be.eql(query.skip);
+          expect(paginate.limit).to.be.eql(10);
           done(error, paginate);
         });
 
