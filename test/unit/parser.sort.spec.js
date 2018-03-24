@@ -261,6 +261,35 @@ describe('sort', function () {
         });
     });
 
+    it('should parse string based projection', function (done) {
+      const _sort = { name: 0, email: 1 };
+
+      request(app)
+        .get('/sort?sort=-name,email')
+        .expect(200, function (error, response) {
+          expect(error).to.not.exist;
+          const sort = response.body;
+          expect(sort).to.exist;
+          expect(sort).to.eql(_sort);
+          done(error, response);
+        });
+    });
+
+
+    it('should parse json based sort', function (done) {
+      const _sort = { name: 1, email: 1 };
+
+      request(app)
+        .get('/sort?sort={"name": "1", "email": "1"}')
+        .expect(200, function (error, response) {
+          expect(error).to.not.exist;
+          const sort = response.body;
+          expect(sort).to.exist;
+          expect(sort).to.eql(_sort);
+          done(error, response);
+        });
+    });
+
   });
 
 });
