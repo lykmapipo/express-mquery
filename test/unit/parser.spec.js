@@ -15,7 +15,6 @@ describe('parser', function() {
   });
 
   it('should have all required parser', function() {
-    expect(parser.distinct).to.exist;
     expect(parser.filter).to.exist;
     expect(parser.paginate).to.exist;
     expect(parser.populate).to.exist;

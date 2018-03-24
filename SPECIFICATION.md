@@ -41,6 +41,7 @@ Example
 - For projection specified using object ,it must be a valid json
 
 
+
 ## Sorting - Result Ordering
 Parse orders(`sort`) from http query parameters and construct 
 [sort](http://mongoosejs.com/docs/api.html#query_Query-sort) query options.
