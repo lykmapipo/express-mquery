@@ -15,14 +15,14 @@ describe.only('filter', function () {
   it('should be a function', function () {
     expect(parser.filter).to.exist;
     expect(parser.filter).to.be.a('function');
+    expect(parser.filter.name).to.be.equal('filter');
+    expect(parser.filter.length).to.be.equal(2);
   });
 
-
-  describe('search', function () {
+  describe('by search', function () {
 
     it('should parse search query', function (done) {
       const query = { filters: { q: 'a' } };
-
       parser
         .filter(JSON.stringify(query), function (error, filter) {
           expect(error).to.not.exist;
@@ -31,13 +31,10 @@ describe.only('filter', function () {
           expect(filter.q).to.be.eql(query.filters.q);
           done(error, filter);
         });
-
     });
 
     it('should parse search query', function (done) {
-
       const query = { q: 'a' };
-
       parser
         .filter(JSON.stringify(query), function (error, filter) {
           expect(error).to.not.exist;
@@ -46,13 +43,12 @@ describe.only('filter', function () {
           expect(filter.q).to.be.eql(query.q);
           done(error, filter);
         });
-
     });
 
   });
 
 
-  describe('comparison', function () {
+  describe('by comparison query operators', function () {
 
     const comparisons = {
       $eq: { qty: { $eq: 20 } },
@@ -70,21 +66,23 @@ describe.only('filter', function () {
       it('should parse fields ' + key + ' operator', function (done) {
         const query = { filters: comparison };
 
-        parser
-          .filter(JSON.stringify(query), function (error,
-            filter) {
-            expect(error).to.not.exist;
-            expect(filter).to.exist;
-            expect(filter).to.be.eql(comparison);
-            done(error, filter);
-          });
+        function next(error, filter) {
+          expect(error).to.not.exist;
+          expect(filter).to.exist;
+          expect(filter).to.be.eql(comparison);
+          done(error, filter);
+        }
+
+        parser.filter(JSON.stringify(query), next);
+
       });
 
     });
 
   });
 
-  describe('logical', function () {
+
+  describe('by logical query operators', function () {
 
     const logicals = {
       $and: { $and: [{ price: { $ne: 1.99 } }, { price: { $exists: true } }] },
@@ -98,14 +96,15 @@ describe.only('filter', function () {
       it('should parse fields ' + key + ' operator', function (done) {
         const query = { filters: logical };
 
-        parser
-          .filter(JSON.stringify(query), function (error,
-            filter) {
-            expect(error).to.not.exist;
-            expect(filter).to.exist;
-            expect(filter).to.be.eql(logical);
-            done(error, filter);
-          });
+        function next(error, filter) {
+          expect(error).to.not.exist;
+          expect(filter).to.exist;
+          expect(filter).to.be.eql(logical);
+          done(error, filter);
+        }
+
+        parser.filter(JSON.stringify(query), next);
+
       });
 
     });
@@ -113,7 +112,7 @@ describe.only('filter', function () {
   });
 
 
-  describe('element', function () {
+  describe('by element query operators', function () {
 
     const elements = {
       $exists: { a: { $exists: true } },
@@ -125,19 +124,220 @@ describe.only('filter', function () {
       it('should parse fields ' + key + ' operator', function (done) {
         const query = { filters: element };
 
-        parser
-          .filter(JSON.stringify(query), function (error,
-            filter) {
-            expect(error).to.not.exist;
-            expect(filter).to.exist;
-            expect(filter).to.be.eql(element);
-            done(error, filter);
-          });
+        function next(error, filter) {
+          expect(error).to.not.exist;
+          expect(filter).to.exist;
+          expect(filter).to.be.eql(element);
+          done(error, filter);
+        }
+
+        parser.filter(JSON.stringify(query), next);
+
       });
 
     });
 
   });
+
+
+  describe('by evaluation query operators', function () {
+
+    const evaluations = {
+      $expr: { $expr: { $gt: ['$spent', '$budget'] } },
+      $jsonSchema: {},
+      $mod: { qty: { $mod: [4, 0] } },
+      $regex: { sku: { $regex: '/789$/' } },
+      $text: { $text: { $search: 'coffee' } },
+      $$where: {}
+    };
+
+    _.forEach(evaluations, function (evaluation, key) {
+
+      it('should parse fields ' + key + ' operator', function (done) {
+        const query = { filters: evaluation };
+
+        function next(error, filter) {
+          expect(error).to.not.exist;
+          expect(filter).to.exist;
+          expect(filter).to.be.eql(evaluation);
+          done(error, filter);
+        }
+
+        parser.filter(JSON.stringify(query), next);
+
+      });
+
+    });
+
+  });
+
+
+  describe('by geospatial query operators', function () {
+
+    const geospatials = {
+      $geoIntersects: {
+        loc: {
+          $geoIntersects: {
+            $geometry: {
+              type: 'Polygon',
+              coordinates: [
+                [
+                  [0, 0],
+                  [3, 6],
+                  [6, 1],
+                  [0, 0]
+                ]
+              ]
+            }
+          }
+        }
+      },
+      $geoWithin: {
+        loc: {
+          $geoWithin: {
+            $geometry: {
+              type: 'Polygon',
+              coordinates: [
+                [
+                  [0, 0],
+                  [3, 6],
+                  [6, 1],
+                  [0, 0]
+                ]
+              ]
+            }
+          }
+        }
+      },
+      $near: {
+        loc: {
+          $near: {
+            $geometry: { type: 'Point', coordinates: [-73.9667, 40.78] },
+            $minDistance: 1000,
+            $maxDistance: 5000
+          }
+        }
+      },
+      $nearSphere: {
+        loc: {
+          $nearSphere: {
+            $geometry: {
+              type: 'Point',
+              coordinates: [-73.9667, 40.78]
+            },
+            $minDistance: 1000,
+            $maxDistance: 5000
+          }
+        }
+      },
+      $box: {
+        loc: {
+          $geoWithin: {
+            $box: [
+              [0, 0],
+              [100, 100]
+            ]
+          }
+        }
+      },
+      $center: {
+        loc: {
+          $geoWithin: {
+            $center: [
+              [-74, 40.74], 10
+            ]
+          }
+        }
+      },
+      $centerSphere: {
+        loc: {
+          $geoWithin: {
+            $centerSphere: [
+              [-88, 30], 10 / 3963.2
+            ]
+          }
+        }
+      },
+      $maxDistance: {
+        loc: {
+          $near: [-74, 40],
+          $maxDistance: 10
+        }
+      },
+      $minDistance: {
+        loc: {
+          $near: [-74, 40],
+          $minDistance: 10
+        }
+      },
+      $polygon: {
+        loc: {
+          $geoWithin: {
+            $polygon: [
+              [0, 0],
+              [3, 6],
+              [6, 0]
+            ]
+          }
+        }
+      }
+    };
+
+    _.forEach(geospatials, function (geospatial, key) {
+
+      it('should parse fields ' + key + ' operator', function (done) {
+        const query = { filters: geospatial };
+
+        function next(error, filter) {
+          expect(error).to.not.exist;
+          expect(filter).to.exist;
+          expect(filter).to.be.eql(geospatial);
+          done(error, filter);
+        }
+
+        parser.filter(JSON.stringify(query), next);
+
+      });
+
+    });
+
+  });
+
+
+  describe('by array query operators', function () {
+
+    const arrays = {
+      $all: {
+        tags: {
+          $all: [
+            ['ssl', 'security']
+          ]
+        }
+      },
+      $elemMatch: { results: { $elemMatch: { $gte: 80, $lt: 85 } } },
+      $size: { field: { $size: 1 } }
+    };
+
+    _.forEach(arrays, function (array, key) {
+
+      it('should parse fields ' + key + ' operator', function (done) {
+        const query = { filters: array };
+
+        function next(error, filter) {
+          expect(error).to.not.exist;
+          expect(filter).to.exist;
+          expect(filter).to.be.eql(array);
+          done(error, filter);
+        }
+
+        parser.filter(JSON.stringify(query), next);
+
+      });
+
+    });
+
+  });
+
 
 
   describe('http', function () {
