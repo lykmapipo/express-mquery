@@ -15,15 +15,15 @@ const ObjectId = Schema.Types.ObjectId;
 const expect = chai.expect;
 const mquery = require(path.join(__dirname, '..', '..'));
 
-describe.only('integration', function () {
+describe('integration', function () {
 
   mongoose.plugin(mquery.plugin);
   const User = mongoose.model('User', new Schema({
-    name: { type: String, searchable: true },
-    age: { type: Number },
-    year: { type: Number },
-    mother: { type: ObjectId, ref: 'User' },
-    father: { type: ObjectId, ref: 'User' }
+    name: { type: String, searchable: true, index: true },
+    age: { type: Number, index: true },
+    year: { type: Number, index: true },
+    mother: { type: ObjectId, ref: 'User', index: true },
+    father: { type: ObjectId, ref: 'User', index: true }
   }));
 
   const father = { name: faker.name.firstName(), age: 58, year: 1960 };
@@ -35,7 +35,15 @@ describe.only('integration', function () {
   const app = express();
   app.use(mquery.middleware({ limit: 10, maxLimit: 50 }));
   app.use('/mquery', function (request, response) {
-    response.json(request.mquery);
+    User
+      .countAndPaginate(request.mquery, function (error, results) {
+        if (error) {
+          throw error;
+        } else {
+          response.status(200);
+          response.json(results);
+        }
+      });
   });
 
   before(function (done) {
@@ -178,205 +186,232 @@ describe.only('integration', function () {
 
   it('should parse filter options', function (done) {
     request(app)
-      .get('/mquery?filter[age]=10&filter[year]=2018')
+      .get('/mquery?filter[age]=10')
       .expect(200, function (error, response) {
         expect(error).to.not.exist;
-        const body = response.body;
-        expect(body).to.exist;
-        expect(body.filter).to.exist;
-        expect(body.filter.age).to.exist;
-        expect(body.filter.age).to.be.equal(10);
-        expect(body.filter.year).to.exist;
-        expect(body.filter.year).to.be.equal(2018);
+        const results = response.body;
+        expect(results).to.exist;
+        expect(results.docs).to.exist;
+        expect(results.docs).to.have.length(1);
+        expect(results.total).to.exist;
+        expect(results.total).to.be.equal(1);
+        expect(results.limit).to.exist;
+        expect(results.limit).to.be.equal(10);
+        expect(results.skip).to.exist;
+        expect(results.skip).to.be.equal(0);
+        expect(results.page).to.exist;
+        expect(results.page).to.be.equal(1);
+        expect(results.pages).to.exist;
+        expect(results.pages).to.be.equal(1);
         done(error, response);
       });
   });
 
   it('should parse filter options', function (done) {
     request(app)
-      .get('/mquery?filter[age][$gte]=10&filter[year][$eq]=2018')
+      .get('/mquery?filter[age][$gt]=10')
       .expect(200, function (error, response) {
         expect(error).to.not.exist;
-        const body = response.body;
-        expect(body).to.exist;
-        expect(body.filter).to.exist;
-        expect(body.filter.age).to.exist;
-        expect(body.filter.age).to.be.eql({ $gte: 10 });
-        expect(body.filter.year).to.exist;
-        expect(body.filter.year).to.be.eql({ $eq: 2018 });
+        const results = response.body;
+        expect(results).to.exist;
+        expect(results.docs).to.exist;
+        expect(results.docs).to.have.length(10);
+        expect(results.total).to.exist;
+        expect(results.total).to.be.equal(22);
+        expect(results.limit).to.exist;
+        expect(results.limit).to.be.equal(10);
+        expect(results.skip).to.exist;
+        expect(results.skip).to.be.equal(0);
+        expect(results.page).to.exist;
+        expect(results.page).to.be.equal(1);
+        expect(results.pages).to.exist;
+        expect(results.pages).to.be.equal(3);
         done(error, response);
       });
   });
 
+
   it('should parse page options', function (done) {
     request(app)
-      .get('/mquery')
+      .get('/mquery?page=1&limit=20')
       .expect(200, function (error, response) {
         expect(error).to.not.exist;
-        const body = response.body;
-        expect(body).to.exist;
-        expect(body.paginate).to.exist;
-        expect(body.paginate.page).to.exist;
-        expect(body.paginate.limit).to.exist;
-        expect(body.paginate.skip).to.exist;
+        const results = response.body;
+        expect(results).to.exist;
+        expect(results.docs).to.exist;
+        expect(results.docs).to.have.length(20);
+        expect(results.total).to.exist;
+        expect(results.total).to.be.equal(32);
+        expect(results.limit).to.exist;
+        expect(results.limit).to.be.equal(20);
+        expect(results.skip).to.exist;
+        expect(results.skip).to.be.equal(0);
+        expect(results.page).to.exist;
+        expect(results.page).to.be.equal(1);
+        expect(results.pages).to.exist;
+        expect(results.pages).to.be.equal(2);
         done(error, response);
       });
   });
 
-  it('should parse page options', function (done) {
-    request(app)
-      .get('/mquery?page=1&limit=20&skip=20')
-      .expect(200, function (error, response) {
-        expect(error).to.not.exist;
-        const body = response.body;
-        expect(body).to.exist;
-        expect(body.paginate).to.exist;
-        expect(body.paginate.page).to.exist;
-        expect(body.paginate.page).to.be.equal(1);
-        expect(body.paginate.limit).to.exist;
-        expect(body.paginate.limit).to.be.equal(20);
-        expect(body.paginate.skip).to.exist;
-        expect(body.paginate.skip).to.be.equal(20);
-        done(error, response);
-      });
-  });
-
-  it('should parse page options', function (done) {
-    request(app)
-      .get('/mquery?page=1&limit=100&skip=20')
-      .expect(200, function (error, response) {
-        expect(error).to.not.exist;
-        const body = response.body;
-        expect(body).to.exist;
-        expect(body.paginate).to.exist;
-        expect(body.paginate.page).to.exist;
-        expect(body.paginate.page).to.be.equal(1);
-        expect(body.paginate.limit).to.exist;
-        expect(body.paginate.limit).to.be.equal(50);
-        expect(body.paginate.skip).to.exist;
-        expect(body.paginate.skip).to.be.equal(20);
-        done(error, response);
-      });
-  });
 
   it('should parse page options', function (done) {
     request(app)
       .get('/mquery?page=-1&limit=-10&skip=-20')
       .expect(200, function (error, response) {
         expect(error).to.not.exist;
-        const body = response.body;
-        expect(body).to.exist;
-        expect(body.paginate).to.exist;
-        expect(body.paginate.page).to.exist;
-        expect(body.paginate.page).to.be.equal(1);
-        expect(body.paginate.limit).to.exist;
-        expect(body.paginate.limit).to.be.equal(10);
-        expect(body.paginate.skip).to.exist;
-        expect(body.paginate.skip).to.be.equal(0);
-        done(error, response);
-      });
-  });
-
-  it('should parse page options', function (done) {
-    request(app)
-      .get('/mquery?page[number]=2&page[limit]=20&page[skip]=20')
-      .expect(200, function (error, response) {
-        expect(error).to.not.exist;
-        const body = response.body;
-        expect(body).to.exist;
-        expect(body.paginate).to.exist;
-        expect(body.paginate.page).to.exist;
-        expect(body.paginate.page).to.be.equal(2);
-        expect(body.paginate.limit).to.exist;
-        expect(body.paginate.limit).to.be.equal(20);
-        expect(body.paginate.skip).to.exist;
-        expect(body.paginate.skip).to.be.equal(20);
+        const results = response.body;
+        expect(results).to.exist;
+        expect(results.docs).to.exist;
+        expect(results.docs).to.have.length(10);
+        expect(results.total).to.exist;
+        expect(results.total).to.be.equal(32);
+        expect(results.limit).to.exist;
+        expect(results.limit).to.be.equal(10);
+        expect(results.skip).to.exist;
+        expect(results.skip).to.be.equal(0);
+        expect(results.page).to.exist;
+        expect(results.page).to.be.equal(1);
+        expect(results.pages).to.exist;
+        expect(results.pages).to.be.equal(4);
         done(error, response);
       });
   });
 
 
   it('should parse populate options', function (done) {
-    const populate = [{ path: 'father' }, { path: 'mother' }];
     request(app)
-      .get('/mquery?populate=father,mother')
+      .get(
+        '/mquery?populate=father,mother&filter[father][$ne]=null&limit=1'
+      )
       .expect(200, function (error, response) {
         expect(error).to.not.exist;
-        const body = response.body;
-        expect(body).to.exist;
-        expect(body.populate).to.exist;
-        expect(body.populate).to.be.eql(populate);
+        const results = response.body;
+        expect(results).to.exist;
+        expect(results.docs).to.exist;
+        expect(results.docs).to.have.length(1);
+        expect(results.docs[0]).to.exist;
+        expect(results.docs[0].father).to.exist;
+        expect(results.docs[0].mother).to.exist;
+        expect(results.total).to.exist;
+        expect(results.total).to.be.equal(30);
+        expect(results.limit).to.exist;
+        expect(results.limit).to.be.equal(1);
+        expect(results.skip).to.exist;
+        expect(results.skip).to.be.equal(0);
+        expect(results.page).to.exist;
+        expect(results.page).to.be.equal(1);
+        expect(results.pages).to.exist;
+        expect(results.pages).to.be.equal(30);
         done(error, response);
       });
   });
 
-  it('should parse populate options', function (done) {
-    const populate = [{ path: 'father' }, { path: 'mother' }];
-    request(app)
-      .get('/mquery?include=father,mother')
-      .expect(200, function (error, response) {
-        expect(error).to.not.exist;
-        const body = response.body;
-        expect(body).to.exist;
-        expect(body.populate).to.exist;
-        expect(body.populate).to.be.eql(populate);
-        done(error, response);
-      });
-  });
 
   it('should parse populate options', function (done) {
-    const populate = [{ path: 'father' }, { path: 'mother', select: { name: 1 } }];
     request(app)
-      .get('/mquery?include=father,mother&fields[mother]=name')
+      .get(
+        '/mquery?populate=father,mother&fields[mother]=name&filter[father][$ne]=null&limit=1'
+      )
       .expect(200, function (error, response) {
         expect(error).to.not.exist;
-        const body = response.body;
-        expect(body).to.exist;
-        expect(body.populate).to.exist;
-        expect(body.populate).to.be.eql(populate);
+        const results = response.body;
+        expect(results).to.exist;
+        expect(results.docs).to.exist;
+        expect(results.docs).to.have.length(1);
+        expect(results.docs[0]).to.exist;
+        expect(results.docs[0].father).to.exist;
+        expect(results.docs[0].mother).to.exist;
+        expect(results.docs[0].mother._id).to.exist;
+        expect(results.docs[0].mother.name).to.exist;
+        expect(results.docs[0].mother.age).to.not.exist;
+        expect(results.docs[0].mother.year).to.not.exist;
+        expect(results.total).to.exist;
+        expect(results.total).to.be.equal(30);
+        expect(results.limit).to.exist;
+        expect(results.limit).to.be.equal(1);
+        expect(results.skip).to.exist;
+        expect(results.skip).to.be.equal(0);
+        expect(results.page).to.exist;
+        expect(results.page).to.be.equal(1);
+        expect(results.pages).to.exist;
+        expect(results.pages).to.be.equal(30);
         done(error, response);
       });
   });
 
   it('should parse select options', function (done) {
-    const select = { name: 1, age: 1, year: 0 };
     request(app)
-      .get('/mquery?select=name,age,-year')
+      .get('/mquery?select=name,age')
       .expect(200, function (error, response) {
         expect(error).to.not.exist;
-        const body = response.body;
-        expect(body).to.exist;
-        expect(body.select).to.exist;
-        expect(body.select).to.be.eql(select);
-        done(error, response);
-      });
-  });
-
-  it('should parse select options', function (done) {
-    const select = { 'name.firstname': 1, age: 1, year: 0 };
-    request(app)
-      .get('/mquery?select=name.firstname,age,-year')
-      .expect(200, function (error, response) {
-        expect(error).to.not.exist;
-        const body = response.body;
-        expect(body).to.exist;
-        expect(body.select).to.exist;
-        expect(body.select).to.be.eql(select);
+        const results = response.body;
+        expect(results).to.exist;
+        expect(results.docs).to.exist;
+        expect(results.docs).to.have.length(10);
+        expect(_.compact(_.map(results.docs, 'year')))
+          .to.have.length(0);
+        expect(results.total).to.exist;
+        expect(results.total).to.be.equal(32);
+        expect(results.limit).to.exist;
+        expect(results.limit).to.be.equal(10);
+        expect(results.skip).to.exist;
+        expect(results.skip).to.be.equal(0);
+        expect(results.page).to.exist;
+        expect(results.page).to.be.equal(1);
+        expect(results.pages).to.exist;
+        expect(results.pages).to.be.equal(4);
         done(error, response);
       });
   });
 
 
   it('should parse sort options', function (done) {
-    const sort = { name: -1, age: 1, year: -1 };
     request(app)
-      .get('/mquery?sort=-name,age,-year')
+      .get('/mquery?sort=age')
       .expect(200, function (error, response) {
         expect(error).to.not.exist;
-        const body = response.body;
-        expect(body).to.exist;
-        expect(body.sort).to.exist;
-        expect(body.sort).to.be.eql(sort);
+        const results = response.body;
+        expect(results).to.exist;
+        expect(results.docs).to.exist;
+        expect(results.docs).to.have.length(10);
+        expect(results.docs[0].age).to.exist;
+        expect(results.docs[0].age).to.be.equal(1);
+        expect(results.total).to.exist;
+        expect(results.total).to.be.equal(32);
+        expect(results.limit).to.exist;
+        expect(results.limit).to.be.equal(10);
+        expect(results.skip).to.exist;
+        expect(results.skip).to.be.equal(0);
+        expect(results.page).to.exist;
+        expect(results.page).to.be.equal(1);
+        expect(results.pages).to.exist;
+        expect(results.pages).to.be.equal(4);
+        done(error, response);
+      });
+  });
+
+  it('should parse sort options', function (done) {
+    request(app)
+      .get('/mquery?sort=-age')
+      .expect(200, function (error, response) {
+        expect(error).to.not.exist;
+        const results = response.body;
+        expect(results).to.exist;
+        expect(results.docs).to.exist;
+        expect(results.docs).to.have.length(10);
+        expect(results.docs[0].age).to.exist;
+        expect(results.docs[0].age).to.be.equal(58);
+        expect(results.total).to.exist;
+        expect(results.total).to.be.equal(32);
+        expect(results.limit).to.exist;
+        expect(results.limit).to.be.equal(10);
+        expect(results.skip).to.exist;
+        expect(results.skip).to.be.equal(0);
+        expect(results.page).to.exist;
+        expect(results.page).to.be.equal(1);
+        expect(results.pages).to.exist;
+        expect(results.pages).to.be.equal(4);
         done(error, response);
       });
   });
