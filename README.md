@@ -3,7 +3,14 @@ express-mquery
 
 [![Build Status](https://travis-ci.org/lykmapipo/express-mquery.svg?branch=master)](https://travis-ci.org/lykmapipo/express-mquery)
 
-Expose [mongoose](https://github.com/Automattic/mongoose) query API through HTTP request.
+Expose [mongoose](https://github.com/Automattic/mongoose) query API through HTTP request with partial support of [json-api](http://jsonapi.org/) : 
+ - [sparse-fieldsets](http://jsonapi.org/format/#fetching-sparse-fieldsets)
+ - [sorting](http://jsonapi.org/format/#fetching-sorting)
+ - [sorting](http://jsonapi.org/format/#fetching-sorting)
+ - [pagination](http://jsonapi.org/format/#fetching-pagination)
+ - [filtering](http://jsonapi.org/format/#fetching-filtering)
+ - [includes](http://jsonapi.org/format/#fetching-includes)
+
 
 ## Installation
 ```js
@@ -112,7 +119,7 @@ GET /customers?query={"age":{"$ne":12}}
 or
 
 GET /customers?filter[name]=Bob
-GET /customers?filter[name][$regex]='/Bo$/
+GET /customers?filter[name][$regex]="/Bo$/"
 GET /customers?filter[age][$gt]=12
 GET /customers?filter[age][$gte]=12
 ```
