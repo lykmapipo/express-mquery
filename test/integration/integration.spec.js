@@ -71,12 +71,33 @@ describe.only('integration', function () {
   });
 
   it('should add mquery mongoose plugin', function () {
-    expect(User.mquery).to.exist;
-    expect(User.mquery).to.be.a('function');
-    expect(User.paginate).to.exist;
-    expect(User.paginate).to.be.a('function');
     expect(User.search).to.exist;
     expect(User.search).to.be.a('function');
+    expect(User.countAndPaginate).to.exist;
+    expect(User.countAndPaginate).to.be.a('function');
+  });
+
+
+  it('should be able to countAndPaginate without options', function (done) {
+    User
+      .countAndPaginate(function (error, results) {
+        expect(error).to.not.exist;
+        expect(results).to.exist;
+        expect(results.docs).to.exist;
+        expect(results.docs).to.have.length(10);
+        expect(results.total).to.exist;
+        expect(results.total).to.be.equal(32);
+        expect(results.limit).to.exist;
+        expect(results.limit).to.be.equal(10);
+        expect(results.skip).to.exist;
+        expect(results.skip).to.be.equal(0);
+        expect(results.page).to.exist;
+        expect(results.page).to.be.equal(1);
+        expect(results.pages).to.exist;
+        expect(results.pages).to.be.equal(4);
+        done(error, results);
+      });
+
   });
 
   it('should parse filter options', function (done) {
