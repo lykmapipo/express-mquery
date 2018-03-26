@@ -11,57 +11,37 @@ $ npm install --save express-mquery
 ```
 
 ## Usage
-- plugin `express-mquery` to mongoose
 ```js
-var mquery = require('express-mquery');
-mongoose.plugin(mquery.plugin, {limit:10});
-```
+//add schema plugin
+const mongoose = require('mongoose');
+const plugin = require('express-mquery').plugin;
+mongoose.plugin(plugin());
 
-- add `express-mquery` middleware to expess
-```js
-var mquery = require('express-mquery');
-var app = require('express');
+const expess = require('express');
+const middleware = require('express-mquery').middleware;
+
+//add express middleware
+const app = express();
+app.use(middleware({ limit: 10, maxLimit: 50 }));
+
 ...
-//somewhere before your routes definition add
-app.use(mquery.middleware({limit:10, maxLimit:50}));
-...
 
-```
+app.get('/users', function(request, response, next) {
+  
+  //obtain request.mquery
+  const mquery = request.mquery;
 
-- parse http query string using `express-mquery` to mongoose `Query`
-```js
-var User = mongoose.model('User');
-app.get('/',function(request, response, next){
-   User
-    .mquery(request);//return valid mongoose query
-    .exec(function(error, models){
-        if(error){
-            next(error);
-        }
-        else{
-            respose.json(models;
-        }
-    }); 
-});
-```
-or
-
-- parse http query string and paginate documents
-```js
-User
-    .paginate(request, function(error, users, pages, total) {
-        if (error) {
-            response.status(500).json({
-                error: error.message
-            });
-        } else {
-            response.json({
-                users: users,
-                pages: pages,
-                total: total
-            });
-        }
+  User
+    .countAndPaginate(mquery, function(error, results) {
+      if (error) {
+        next(error);
+      } else {
+        response.status(200);
+        response.json(results);
+      }
     });
+
+});
 ```
 
 ### Usage with request
@@ -88,7 +68,7 @@ request({
 ```
 
 ## Querying
-All the following parameters `(sort, skip, limit, query, populate, select and distinct)` support the entire mongoose feature set.
+All the following parameters `(sort, skip, limit, query, populate, select)` support the entire mongoose feature set.
 
 >When passing values as objects or arrays in URLs, they must be valid JSON
 
@@ -97,7 +77,13 @@ All the following parameters `(sort, skip, limit, query, populate, select and di
 GET /customers?sort=name
 GET /customers?sort=-name
 GET /customers?sort={"name":1}
-GET /customers?sort={"name":0}
+GET /customers?sort={"name":1, "email":-1}
+
+or
+
+GET /customers?sort=name
+GET /customers?sort=-name
+GET /customers?sort[name]=1&sort[email]=-1
 ```
 
 ### Skip
@@ -126,21 +112,23 @@ GET /customers?query={"age":{"$ne":12}}
 or
 
 GET /customers?filter[name]=Bob
-GET /customers?filter[name]={"$regex":"/Bo$/"}
-GET /customers?filter[age]={"$gt":12}
-GET /customers?filter[age]={"$gte":12}
-GET /customers?filter[age]={"$lt":12}
-GET /customers?filter[age]={"$lte":12}
-GET /customers?filter[age]={"$ne":12}
+GET /customers?filter[name][$regex]='/Bo$/
+GET /customers?filter[age][$gt]=12
+GET /customers?filter[age][$gte]=12
 ```
 
 ### Populate
 Works with create, read and update operations
 
 ```js
-GET/POST/PUT /invoices?populate=customer
-GET/POST/PUT /invoices?populate={"path":"customer"}
-GET/POST/PUT /invoices?populate=[{"path":"customer"},{"path":"products"}]
+GET /invoices?populate=customer
+GET /invoices?populate={"path":"customer"}
+GET /invoices?populate=[{"path":"customer"},{"path":"products"}]
+
+or
+
+GET /invoice?include[customer]=name,number&includes[items]=name,price
+GET /invoice?includes=customer,items&fields[customer]=name,number&fields[items]=name,price
 ```
 
 ### Select
@@ -151,15 +139,14 @@ GET /customers?select=name
 GET /customers?select=-name
 GET /customers?select={"name":1}
 GET /customers?select={"name":0}
-```
 
-### Distinct
-```js
-GET /customers?distinct=name
-```
+or
 
-## TODOS
-- [ ] support geo queries
+GET /customers?fields=name
+GET /customers?fields=-name
+GET /customers?fields=name,-email
+
+```
 
 ## Testing
 
