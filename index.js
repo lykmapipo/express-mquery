@@ -4,22 +4,22 @@
 const path = require('path');
 const _ = require('lodash');
 const buildQuery = require(path.join(__dirname, 'lib', 'buildQuery'));
-const parse = require(path.join(__dirname, 'lib', 'parser')).parse;
+const parser = require(path.join(__dirname, 'lib', 'parser'));
 const mongoosePaginate = require(path.join(__dirname, 'lib', 'mongoosePaginate'));
-const expressPaginate = require('express-paginate');
+
 
 //export express middleware
-exports.middleware = function(options) {
-  options = options || {
+exports.middleware = function (optns) {
+  const options = optns || {
     limit: 10,
     maxLimit: 50
   };
 
   //return middleware stack
-  return [
-    expressPaginate.middleware(options.limit, options.maxLimit),
-    function(request, response, next) {
-      parse(request.query, function(error, mquery) {
+  return [function (request, response, next) {
+    const query = _.merge({}, options, request.query);
+    parser
+      .parse(query, function (error, mquery) {
         if (error) {
           next(error);
         } else {
@@ -27,13 +27,12 @@ exports.middleware = function(options) {
           next();
         }
       });
-    }
-  ];
+  }];
 
 };
 
 //export mongoose plugin
-exports.plugin = function(schema, options) {
+exports.plugin = function (schema, options) {
   //normalize options
   options = options || {};
 
@@ -42,7 +41,7 @@ exports.plugin = function(schema, options) {
    * @param  {Request} request valid express HTTP request
    * @return {Query}         valid mongoose query instance
    */
-  schema.statics.mquery = function(request) {
+  schema.statics.mquery = function (request) {
     const query = options.query || this.find();
     if (request.mquery) {
       return buildQuery(options)(query, request.mquery);
@@ -59,7 +58,7 @@ exports.plugin = function(schema, options) {
    * @param  {Function} [done]   callback to invoke on success or error, if not
    *                             provided a promise will be returned
    */
-  schema.statics.paginate = function(request, done) {
+  schema.statics.paginate = function (request, done) {
 
     //obtain mongoose query object
     let query = request.mquery ? request.mquery : request;

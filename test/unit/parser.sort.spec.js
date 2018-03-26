@@ -121,7 +121,7 @@ describe('sort', function () {
 
 
   it('should parse string based projection', function (done) {
-    const _sort = { name: 0, email: 0 };
+    const _sort = { name: -1, email: -1 };
     const query = { sort: '-name,-email' };
 
     parser
@@ -216,7 +216,7 @@ describe('sort', function () {
 
 
     it('should parse string based projection', function (done) {
-      const _sort = { name: 0, email: 0 };
+      const _sort = { name: -1, email: -1 };
       const query = { sort: '-name,-email' };
 
       request(app)
@@ -232,7 +232,7 @@ describe('sort', function () {
     });
 
     it('should parse string based projection', function (done) {
-      const _sort = { name: 0, email: 1 };
+      const _sort = { name: -1, email: 1 };
       const query = { sort: '-name,email' };
 
       request(app)
@@ -248,10 +248,10 @@ describe('sort', function () {
     });
 
     it('should parse string based projection', function (done) {
-      const _sort = { name: 0, email: 1 };
+      const _sort = { name: -1, email: 1 };
 
       request(app)
-        .get('/sort?sort[name]=0&sort[email]=1')
+        .get('/sort?sort[name]=-1&sort[email]=1')
         .expect(200, function (error, response) {
           expect(error).to.not.exist;
           const sort = response.body;
@@ -262,7 +262,7 @@ describe('sort', function () {
     });
 
     it('should parse string based projection', function (done) {
-      const _sort = { name: 0, email: 1 };
+      const _sort = { name: -1, email: 1 };
 
       request(app)
         .get('/sort?sort=-name,email')
