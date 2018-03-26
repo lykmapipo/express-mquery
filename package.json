@@ -53,10 +53,10 @@
     "express-paginate": "^0.3.0",
     "lodash": "^4.17.5",
     "mongoose": "^5.0.11",
+    "mongoose-regex-search": "^0.4.1",
     "traverse": "^0.6.6"
   },
   "devDependencies": {
-    "async": "^2.6.0",
     "body-parser": "^1.18.2",
     "chai": "^4.1.2",
     "grunt": "^1.0.2",
