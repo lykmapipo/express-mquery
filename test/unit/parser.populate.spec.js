@@ -3,11 +3,26 @@
 
 //global imports
 const path = require('path');
+// const qs = require('qs');
 const chai = require('chai');
+const express = require('express');
+const request = require('supertest');
 const expect = chai.expect;
 const parser = require(path.join(__dirname, '..', '..', 'lib', 'parser'));
 
 describe('populate', function () {
+
+  const app = express();
+  app.use('/populate', function (request, response) {
+    parser
+      .populate(request.query, function (error, projections) {
+        if (error) {
+          throw error;
+        } else {
+          response.json(projections);
+        }
+      });
+  });
 
   it('should be a function', function () {
     expect(parser.populate).to.exist;
@@ -32,6 +47,21 @@ describe('populate', function () {
 
   });
 
+  it('should parse string based path population', function (done) {
+    const _populate = { path: 'customer' };
+
+    request(app)
+      .get('/populate?includes=customer')
+      .expect(200, function (error, response) {
+        expect(error).to.not.exist;
+        const populate = response.body;
+        expect(populate).to.exist;
+        expect(populate[0]).to.be.eql(_populate);
+        done(error, response);
+      });
+
+  });
+
 
   it('should parse string based paths population', function (done) {
     const _populate = [{ path: 'customer' }, { path: 'items' }];
@@ -44,6 +74,21 @@ describe('populate', function () {
         expect(populate).to.have.length(2);
         expect(populate).to.eql(_populate);
         done(error, populate);
+      });
+
+  });
+
+  it('should parse string based paths population', function (done) {
+    const _populate = [{ path: 'customer' }, { path: 'items' }];
+
+    request(app)
+      .get('/populate?includes=customer, items')
+      .expect(200, function (error, response) {
+        expect(error).to.not.exist;
+        const populate = response.body;
+        expect(populate).to.exist;
+        expect(populate).to.be.eql(_populate);
+        done(error, response);
       });
 
   });
@@ -61,6 +106,25 @@ describe('populate', function () {
           expect(populate).to.have.length(1);
           expect(populate[0]).to.eql(_populate);
           done(error, populate);
+        });
+
+    });
+
+  it('should parse string based path with select population',
+    function (done) {
+
+      const _populate = { path: 'customer', select: { name: 1 } };
+      const query = { populate: 'customer', fields: { customer: 'name' } };
+
+      request(app)
+        .get('/populate')
+        .query(query)
+        .expect(200, function (error, response) {
+          expect(error).to.not.exist;
+          const populate = response.body;
+          expect(populate).to.exist;
+          expect(populate[0]).to.be.eql(_populate);
+          done(error, response);
         });
 
     });
