@@ -19,7 +19,7 @@ describe.only('integration', function () {
 
   mongoose.plugin(mquery.plugin);
   const User = mongoose.model('User', new Schema({
-    name: { type: String },
+    name: { type: String, searchable: true },
     age: { type: Number },
     year: { type: Number },
     mother: { type: ObjectId, ref: 'User' },
@@ -79,6 +79,7 @@ describe.only('integration', function () {
 
 
   it('should be able to countAndPaginate without options', function (done) {
+
     User
       .countAndPaginate(function (error, results) {
         expect(error).to.not.exist;
@@ -99,6 +100,81 @@ describe.only('integration', function () {
       });
 
   });
+
+  it('should be able to countAndPaginate with options', function (done) {
+
+    const options = { page: 1, limit: 20 };
+    User
+      .countAndPaginate(options, function (error, results) {
+        expect(error).to.not.exist;
+        expect(results).to.exist;
+        expect(results.docs).to.exist;
+        expect(results.docs).to.have.length(20);
+        expect(results.total).to.exist;
+        expect(results.total).to.be.equal(32);
+        expect(results.limit).to.exist;
+        expect(results.limit).to.be.equal(20);
+        expect(results.skip).to.exist;
+        expect(results.skip).to.be.equal(0);
+        expect(results.page).to.exist;
+        expect(results.page).to.be.equal(1);
+        expect(results.pages).to.exist;
+        expect(results.pages).to.be.equal(2);
+        done(error, results);
+      });
+
+  });
+
+  it('should be able to countAndPaginate with mquery options',
+    function (done) {
+
+      const mquery = { paginate: { page: 1, limit: 20 } };
+      User
+        .countAndPaginate(mquery, function (error, results) {
+          expect(error).to.not.exist;
+          expect(results).to.exist;
+          expect(results.docs).to.exist;
+          expect(results.docs).to.have.length(20);
+          expect(results.total).to.exist;
+          expect(results.total).to.be.equal(32);
+          expect(results.limit).to.exist;
+          expect(results.limit).to.be.equal(20);
+          expect(results.skip).to.exist;
+          expect(results.skip).to.be.equal(0);
+          expect(results.page).to.exist;
+          expect(results.page).to.be.equal(1);
+          expect(results.pages).to.exist;
+          expect(results.pages).to.be.equal(2);
+          done(error, results);
+        });
+
+    });
+
+  it('should be able to countAndPaginate with mquery options',
+    function (done) {
+
+      const mquery = { filter: { q: father.name } };
+      User
+        .countAndPaginate(mquery, function (error, results) {
+          expect(error).to.not.exist;
+          expect(results).to.exist;
+          expect(results.docs).to.exist;
+          expect(results.docs).to.have.length(1);
+          expect(results.total).to.exist;
+          expect(results.total).to.be.equal(1);
+          expect(results.limit).to.exist;
+          expect(results.limit).to.be.equal(10);
+          expect(results.skip).to.exist;
+          expect(results.skip).to.be.equal(0);
+          expect(results.page).to.exist;
+          expect(results.page).to.be.equal(1);
+          expect(results.pages).to.exist;
+          expect(results.pages).to.be.equal(1);
+          done(error, results);
+        });
+
+    });
+
 
   it('should parse filter options', function (done) {
     request(app)

@@ -119,7 +119,14 @@ exports.plugin = function plugin(schema, schemaOptns) {
    * @param {Number} [optns.paginate.page=1] 
    * @param {Number} [optns.paginate.limit=10] valid query limit option
    * @param {Function} [done] callback to invoke on success or failure
-   * @returns {Promise}
+   * @returns {Object} results
+   * @returns {Object[]} [results.docs] array of documents
+   * @returns {Number} [results.total] total number of documents in collection that match a query
+   * @returns {Number} [results.size]  length of current page documents
+   * @returns {Number} [results.limit] limit that was used
+   * @returns {Number} [results.skip] skip that was used
+   * @returns {Number} [results.page] page that was used
+   * @returns {Number} [results.pages] total number of pages that match a query
    */
   schema.statics.countAndPaginate = function countAndPaginate(optns, done) {
 
@@ -152,17 +159,20 @@ exports.plugin = function plugin(schema, schemaOptns) {
 
     //initialize query
     let query = this.find();
+    let countQuery = this.find();
 
     //try build search query
     const canSearch = (_.isFunction(this.search) && _.isString(filter.q));
     if (canSearch) {
       query = this.search(filter.q);
+      countQuery = this.search(filter.q);
     }
     delete filter.q;
 
     //add criteria
     filter = this.where(filter).cast(this);
     query.where(filter);
+    countQuery.where(filter);
 
     if (page && page > 0) {
       skip = (page - 1) * limit;
@@ -192,11 +202,11 @@ exports.plugin = function plugin(schema, schemaOptns) {
 
     async.parallel({
 
-      count: function countQuery(next) {
-        this.count(filter).exec(next);
-      }.bind(this),
+      count: function countMatched(next) {
+        countQuery.count().exec(next);
+      },
 
-      docs: function paginateQuery(next) {
+      docs: function paginateMatched(next) {
         query.exec(next);
       }
 
@@ -206,6 +216,7 @@ exports.plugin = function plugin(schema, schemaOptns) {
         results = _.merge({}, {
           docs: results.docs,
           total: results.count,
+          size: results.docs.length,
           limit: limit,
           skip: skip,
           page: page,
