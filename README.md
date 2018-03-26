@@ -3,9 +3,8 @@ express-mquery
 
 [![Build Status](https://travis-ci.org/lykmapipo/express-mquery.svg?branch=master)](https://travis-ci.org/lykmapipo/express-mquery)
 
-Expose [mongoose](https://github.com/Automattic/mongoose) query API through HTTP request with partial support of [json-api](http://jsonapi.org/) : 
+Expose [mongoose](https://github.com/Automattic/mongoose) query API through HTTP request with partial support of [json-api](http://jsonapi.org/): 
  - [sparse-fieldsets](http://jsonapi.org/format/#fetching-sparse-fieldsets)
- - [sorting](http://jsonapi.org/format/#fetching-sorting)
  - [sorting](http://jsonapi.org/format/#fetching-sorting)
  - [pagination](http://jsonapi.org/format/#fetching-pagination)
  - [filtering](http://jsonapi.org/format/#fetching-filtering)
@@ -48,29 +47,6 @@ app.get('/users', function(request, response, next) {
       }
     });
 
-});
-```
-
-### Usage with request
-```js
-var request = require('request')
-
-request({
-  url: '/customers',
-  qs: {
-    query: JSON.stringify({
-      $or: [{
-        name: '~Another'
-      }, {
-        $and: [{
-          name: '~Product'
-        }, {
-          price: '<=10'
-        }]
-      }],
-      price: 20
-    })
-  }
 });
 ```
 
