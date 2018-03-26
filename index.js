@@ -1,5 +1,6 @@
 'use strict';
 
+
 //dependencies
 const path = require('path');
 const _ = require('lodash');
@@ -8,28 +9,50 @@ const parser = require(path.join(__dirname, 'lib', 'parser'));
 const mongoosePaginate = require(path.join(__dirname, 'lib', 'mongoosePaginate'));
 
 
-//export express middleware
-exports.middleware = function (optns) {
-  const options = optns || {
+/**
+ * @name middleware
+ * @function middleware
+ * @param  {Object} [optns] valid middleware options
+ * @param  {Object} [optns.limit] default limit
+ * @param  {Object} [optns.maxLimit] default max limit
+ * @return {Function[]} valid express middleware stack
+ * @example
+ * 
+ * const expess = require('express');
+ * const middleware = require('express-mquery').middleware;
+ *
+ * 
+ * const app = express();
+ * app.use(middleware({limit: 10, maxLimit: 50}));
+ * 
+ */
+exports.middleware = function middleware(optns) {
+
+  //normalize options
+  const options = _.merge({}, {
     limit: 10,
     maxLimit: 50
-  };
+  }, optns);
 
-  //return middleware stack
-  return [function (request, response, next) {
-    const query = _.merge({}, options, request.query);
-    parser
-      .parse(query, function (error, mquery) {
-        if (error) {
-          next(error);
-        } else {
-          request.mquery = mquery;
-          next();
-        }
-      });
-  }];
+  //pack & return middlewares stack
+  return [
+    function prepareMquery(request, response, next) {
+      const query = _.merge({}, options, request.query);
+      parser
+        .parse(query, function (error, mquery) {
+
+          if (mquery && !_.isEmpty(mquery)) {
+            request.mquery = mquery;
+          }
+
+          next(error, mquery);
+
+        });
+    }
+  ];
 
 };
+
 
 //export mongoose plugin
 exports.plugin = function (schema, options) {
