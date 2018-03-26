@@ -6,6 +6,7 @@ const path = require('path');
 const _ = require('lodash');
 const buildQuery = require(path.join(__dirname, 'lib', 'buildQuery'));
 const parser = require(path.join(__dirname, 'lib', 'parser'));
+const mongooseSearch = require('mongoose-regex-search');
 const mongoosePaginate = require(path.join(__dirname, 'lib', 'mongoosePaginate'));
 
 
@@ -59,6 +60,11 @@ exports.plugin = function (schema, options) {
 
   //normalize options
   options = options || {};
+
+  //ensure search
+  if (!schema.statics.search) {
+    mongooseSearch(schema, options);
+  }
 
   /**
    * @description build mongoose query from request.mquery object

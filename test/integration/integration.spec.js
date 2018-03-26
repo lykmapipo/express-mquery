@@ -3,13 +3,34 @@
 //dependencies
 //global imports
 const path = require('path');
+const _ = require('lodash');
+const async = require('async');
+const faker = require('faker');
 const chai = require('chai');
 const express = require('express');
 const request = require('supertest');
+const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
+const ObjectId = Schema.Types.ObjectId;
 const expect = chai.expect;
 const mquery = require(path.join(__dirname, '..', '..'));
 
-describe('middleware', function () {
+describe.only('integration', function () {
+
+  mongoose.plugin(mquery.plugin);
+  const User = mongoose.model('User', new Schema({
+    name: { type: String },
+    age: { type: Number },
+    year: { type: Number },
+    mother: { type: ObjectId, ref: 'User' },
+    father: { type: ObjectId, ref: 'User' }
+  }));
+
+  const father = { name: faker.name.firstName(), age: 58, year: 1960 };
+  const mother = { name: faker.name.firstName(), age: 48, year: 1970 };
+  const kids = _.map(_.range(1, 31), (age) => {
+    return { name: faker.name.firstName(), age: age, year: 1980 + age };
+  });
 
   const app = express();
   app.use(mquery.middleware({ limit: 10, maxLimit: 50 }));
@@ -17,18 +38,45 @@ describe('middleware', function () {
     response.json(request.mquery);
   });
 
-  it('should parse search options', function (done) {
-    request(app)
-      .get('/mquery?q=mquery')
-      .expect(200, function (error, response) {
-        expect(error).to.not.exist;
-        const body = response.body;
-        expect(body).to.exist;
-        expect(body.filter).to.exist;
-        expect(body.filter.q).to.exist;
-        expect(body.filter.q).to.be.equal('mquery');
-        done(error, response);
-      });
+  before(function (done) {
+    mongoose.connect('mongodb://localhost/express-mquery', done);
+  });
+
+  before(function (done) {
+    User.remove(done);
+  });
+
+  //seed userh
+  before(function (done) {
+    async.waterfall([
+      function (next) {
+        async.parallel({
+          mother: function (next) {
+            User.create(mother, next);
+          },
+          father: function (next) {
+            User.create(father, next);
+          }
+        }, next);
+      },
+      function (parents, next) {
+        User
+          .create(
+            _.map(kids, (kid) => { return _.merge({}, kid, parents); }),
+            next
+          );
+      }
+    ], done);
+
+  });
+
+  it('should add mquery mongoose plugin', function () {
+    expect(User.mquery).to.exist;
+    expect(User.mquery).to.be.a('function');
+    expect(User.paginate).to.exist;
+    expect(User.paginate).to.be.a('function');
+    expect(User.search).to.exist;
+    expect(User.search).to.be.a('function');
   });
 
   it('should parse filter options', function (done) {
@@ -234,6 +282,11 @@ describe('middleware', function () {
         expect(body.sort).to.be.eql(sort);
         done(error, response);
       });
+  });
+
+
+  after(function (done) {
+    User.remove(done);
   });
 
 });
