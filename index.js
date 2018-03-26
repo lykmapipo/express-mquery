@@ -56,6 +56,7 @@ exports.middleware = function middleware(optns) {
 
 //export mongoose plugin
 exports.plugin = function (schema, options) {
+
   //normalize options
   options = options || {};
 
@@ -88,12 +89,14 @@ exports.plugin = function (schema, options) {
 
     //extend mquery if exist
     if (request.mquery) {
+
       //pick page and limit from request query params
       const pageAndLimit = _.pick(request.query, ['page', 'limit']);
 
       //extend query with page and limit request params
       query =
         _.merge({}, query, pageAndLimit);
+
     }
 
     //execute query
