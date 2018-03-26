@@ -17,10 +17,10 @@ const mongoose = require('mongoose');
 const plugin = require('express-mquery').plugin;
 mongoose.plugin(plugin());
 
+//add express middleware
 const expess = require('express');
 const middleware = require('express-mquery').middleware;
 
-//add express middleware
 const app = express();
 app.use(middleware({ limit: 10, maxLimit: 50 }));
 
