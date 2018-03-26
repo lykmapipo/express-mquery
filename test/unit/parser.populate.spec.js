@@ -7,7 +7,7 @@ const chai = require('chai');
 const expect = chai.expect;
 const parser = require(path.join(__dirname, '..', '..', 'lib', 'parser'));
 
-describe.only('populate', function () {
+describe('populate', function () {
 
   it('should be a function', function () {
     expect(parser.populate).to.exist;
@@ -48,11 +48,11 @@ describe.only('populate', function () {
 
   });
 
-  it.skip('should parse string based path with select population',
+  it('should parse string based path with select population',
     function (done) {
 
       const _populate = { path: 'customer', select: { name: 1 } };
-      const query = { populate: 'customer.name' };
+      const query = { populate: 'customer', fields: { customer: 'name' } };
 
       parser
         .populate(JSON.stringify(query), function (error, populate) {
@@ -66,14 +66,20 @@ describe.only('populate', function () {
     });
 
 
-  it.skip('should parse string based paths with select population',
+  it('should parse string based paths with select population',
     function (done) {
 
       const _populate = [
         { path: 'customer', select: { name: 1 } },
         { path: 'items', select: { name: 1, price: 1 } }
       ];
-      const query = { populate: 'customer.name,items.name,items.price' };
+      const query = {
+        populate: 'customer,items',
+        fields: {
+          customer: 'name',
+          items: 'name,price'
+        }
+      };
 
       parser
         .populate(JSON.stringify(query), function (error, populate) {
@@ -86,14 +92,20 @@ describe.only('populate', function () {
 
     });
 
-  it.skip('should parse string based paths with exclude select population',
+  it('should parse string based paths with exclude select population',
     function (done) {
 
       const _populate = [
         { path: 'customer', select: { name: 1 } },
         { path: 'items', select: { price: 0 } }
       ];
-      const query = { populate: 'customer.name,-items.price' };
+      const query = {
+        populate: 'customer,items',
+        fields: {
+          customer: 'name',
+          items: '-price'
+        }
+      };
 
       parser
         .populate(JSON.stringify(query), function (error, populate) {
