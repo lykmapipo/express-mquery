@@ -12,7 +12,7 @@ const mquery = require(path.join(__dirname, '..', '..'));
 describe('middleware', function () {
 
   const app = express();
-  app.use(mquery.middleware({ limit: 10, maxLimit: 50 }));
+  app.use(mquery({ limit: 10, maxLimit: 50 }));
   app.use('/mquery', function (request, response) {
     response.json(request.mquery);
   });

@@ -10,41 +10,37 @@ Expose [mongoose](https://github.com/Automattic/mongoose) query API through HTTP
  - [filtering](http://jsonapi.org/format/#fetching-filtering)
  - [includes](http://jsonapi.org/format/#fetching-includes)
 
+*Note: Due to refactoring, you must install [mongoose-rest-actions](https://github.com/lykmapipo/mongoose-rest-actions) to have back mongoose plugin*
 
 ## Installation
 ```js
-$ npm install --save express-mquery
+$ npm install --save express-mquery mongoose-rest-actions
 ```
 
 ## Usage
 ```js
-//add schema plugin
+//plugin rest actions plugin
 const mongoose = require('mongoose');
-const plugin = require('express-mquery').plugin;
-mongoose.plugin(plugin());
+const actions = require('mongoose-rest-actions');
+mongoose.plugin(actions);
 
 //add express middleware
 const expess = require('express');
-const middleware = require('express-mquery').middleware;
+const mquery = require('express-mquery');
 
 const app = express();
-app.use(middleware({ limit: 10, maxLimit: 50 }));
+app.use(mquery({ limit: 10, maxLimit: 50 }));
 
 ...
 
 app.get('/users', function(request, response, next) {
   
   //obtain request.mquery
-  const mquery = request.mquery;
+  const options = request.mquery;
 
   User
-    .countAndPaginate(mquery, function(error, results) {
-      if (error) {
-        next(error);
-      } else {
-        response.status(200);
-        response.json(results);
-      }
+    .get(options, function(error, results) {
+      ...hanlde error or reply
     });
 
 });
