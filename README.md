@@ -47,11 +47,11 @@ app.get('/users', function(request, response, next) {
 ```
 
 ## Querying
-All the following parameters `(sort, skip, limit, query, populate, select)` support the entire mongoose feature set.
+All the following parameters `(sort, page, skip, limit, query, populate, select)` support the entire mongoose feature set.
 
 >When passing values as objects or arrays in URLs, they must be valid JSON
 
-### Sort
+### Sort or Order
 ```js
 GET /customers?sort=name
 GET /customers?sort=-name
@@ -63,6 +63,13 @@ or
 GET /customers?sort=name
 GET /customers?sort=-name
 GET /customers?sort[name]=1&sort[email]=-1
+```
+
+### Page
+```js
+GET /customers?page=1
+GET /customers?page=1&limit=10
+GET /customers?page[number]=1&page[size]=10
 ```
 
 ### Skip
@@ -84,9 +91,6 @@ GET /customers?query={"name":"Bob"}
 GET /customers?query={"name":{"$regex":"/Bo$/"}}
 GET /customers?query={"age":{"$gt":12}}
 GET /customers?query={"age":{"$gte":12}}
-GET /customers?query={"age":{"$lt":12}}
-GET /customers?query={"age":{"$lte":12}}
-GET /customers?query={"age":{"$ne":12}}
 
 or
 
@@ -96,7 +100,7 @@ GET /customers?filter[age][$gt]=12
 GET /customers?filter[age][$gte]=12
 ```
 
-### Populate
+### Populate or Include
 Works with create, read and update operations
 
 ```js
@@ -106,11 +110,12 @@ GET /invoices?populate=[{"path":"customer"},{"path":"products"}]
 
 or
 
+GET /invoice?include=customer
 GET /invoice?include[customer]=name,number&includes[items]=name,price
-GET /invoice?includes=customer,items&fields[customer]=name,number&fields[items]=name,price
+GET /invoice?include=customer,items&fields[customer]=name,number&fields[items]=name,price
 ```
 
-### Select
+### Select or Fields
 `_id` is always returned unless explicitely excluded
 
 ```js
@@ -124,7 +129,7 @@ or
 GET /customers?fields=name
 GET /customers?fields=-name
 GET /customers?fields=name,-email
-
+GET /customers?include=customer&fields[customer]=name
 ```
 
 ## Testing
