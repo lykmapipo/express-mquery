@@ -52,6 +52,16 @@ with the structure below
 ```js
 GET /invoices?fields=number,amount&filter[name]=Bob&filter[amount][$gte]=1200&include=customer,items&fields[customer]=name,number&fields[items]=name,price&page[number]=1&page[size]=10&sort[number]=1&sort[amount]=-1
 
+{
+  filter: { name: "Bob", amount: { $gte: 1200 } },
+  paginate: { limit: 10, skip: 0, page: 1 },
+  populate: [
+  	{ path: "customer", select: { name: 1, number: 1 } },
+  	{ path: "items", select: { name: 1, price: 1 } }
+  ],
+  select: { number: 1, amount: 1 },
+  sort: { number: 1, amount: -1 }
+}
 
 ```
 
