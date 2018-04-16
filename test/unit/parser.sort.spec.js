@@ -120,7 +120,7 @@ describe('sort', function () {
   });
 
 
-  it('should parse string based projection', function (done) {
+  it('should parse string based sort', function (done) {
     const _sort = { name: -1, email: -1 };
     const query = { sort: '-name,-email' };
 
@@ -215,7 +215,7 @@ describe('sort', function () {
     });
 
 
-    it('should parse string based projection', function (done) {
+    it('should parse string based sort', function (done) {
       const _sort = { name: -1, email: -1 };
       const query = { sort: '-name,-email' };
 
@@ -231,7 +231,7 @@ describe('sort', function () {
         });
     });
 
-    it('should parse string based projection', function (done) {
+    it('should parse string based sort', function (done) {
       const _sort = { name: -1, email: 1 };
       const query = { sort: '-name,email' };
 
@@ -247,7 +247,7 @@ describe('sort', function () {
         });
     });
 
-    it('should parse string based projection', function (done) {
+    it('should parse string based sort', function (done) {
       const _sort = { name: -1, email: 1 };
 
       request(app)
@@ -261,7 +261,7 @@ describe('sort', function () {
         });
     });
 
-    it('should parse string based projection', function (done) {
+    it('should parse string based sort', function (done) {
       const _sort = { name: -1, email: 1 };
 
       request(app)

@@ -6,7 +6,6 @@ const path = require('path');
 const _ = require('lodash');
 const parser = require(path.join(__dirname, 'lib', 'parser'));
 
-
 /**
  * @name mquery
  * @function mquery
@@ -36,18 +35,19 @@ module.exports = exports = function mquery(optns) {
   //pack & return middlewares stack
   return [
     function prepareMquery(request, response, next) {
-      const query = _.merge({}, options, request.query);
+
+      const query =
+        _.merge({}, options, { headers: request.headers }, request.query);
+
       parser
         .parse(query, function (error, mquery) {
-
           if (mquery && !_.isEmpty(mquery)) {
             request.mquery = mquery;
           }
-
           next(error, mquery);
-
         });
     }
+
   ];
 
 };

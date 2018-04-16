@@ -2,31 +2,31 @@
 
 
 //global imports
-const path = require('path')
+const path = require('path');
+const _ = require('lodash');
 const express = require('express');
 const bodyParser = require('body-parser');
 
 //local imports
-const parse = require(path.join(__dirname, '..', 'lib', 'parser')).parse;
+const mquery = require(path.join(__dirname, '..'));
 
 //prepare express app
 const app = express();
-
-//bind body parsing middlewares
-app.use(bodyParser.urlencoded({
-  extended: true
-}));
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json({ limit: '2mb' }));
+app.use(mquery());
 
-//TODO add express-mquery middleware
-
-app.get('/', function(request, response) {
-  console.log('before: ', request.query);
-  parse(request.query, function(error, query) {
-    console.log('after: ', query);
-    response.json(error || query);
-  });
-
+//handle requests
+app.get('/', function (request, response) {
+  const options = _.merge({}, request.mquery);
+  response.json(options);
 });
 
-app.listen(9999);
+const PORT = 3000;
+app.listen(PORT, function (error) {
+  if (error) {
+    throw error;
+  } else {
+    console.log(`visit http://0.0.0.0:${PORT}`);
+  }
+});

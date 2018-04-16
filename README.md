@@ -40,7 +40,7 @@ app.get('/users', function(request, response, next) {
 
   User
     .get(options, function(error, results) {
-      ...hanlde error or reply
+      ...handle error or reply
     });
 
 });
@@ -110,9 +110,9 @@ GET /invoices?populate=[{"path":"customer"},{"path":"products"}]
 
 or
 
-GET /invoice?include=customer
-GET /invoice?include[customer]=name,number&includes[items]=name,price
-GET /invoice?include=customer,items&fields[customer]=name,number&fields[items]=name,price
+GET /invoices?include=customer
+GET /invoices?include[customer]=name,number&includes[items]=name,price
+GET /invoices?include=customer,items&fields[customer]=name,number&fields[items]=name,price
 ```
 
 ### Select or Fields
@@ -128,8 +128,8 @@ or
 
 GET /customers?fields=name
 GET /customers?fields=-name
-GET /customers?fields=name,-email
-GET /customers?include=customer&fields[customer]=name
+GET /customers?fields=name,email
+GET /invoices?include=customer&fields[customer]=name
 ```
 
 ## Testing

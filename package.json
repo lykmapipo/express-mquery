@@ -4,7 +4,8 @@
   "description": "Expose mongoose query API through HTTP request",
   "main": "index.js",
   "scripts": {
-    "test": "grunt test"
+    "test": "grunt test",
+    "dev": "nodemon examples/index.js"
   },
   "repository": {
     "type": "git",
@@ -16,12 +17,10 @@
     "url": "https://github.com/lykmapipo/express-mquery/issues"
   },
   "homepage": "https://github.com/lykmapipo/express-mquery",
-  "contributors": [
-    {
-      "name": "lykmapipo",
-      "github": "https://github.com/lykmapipo"
-    }
-  ],
+  "contributors": [{
+    "name": "lykmapipo",
+    "github": "https://github.com/lykmapipo"
+  }],
   "keywords": [
     "express",
     "mongoose",
@@ -49,7 +48,9 @@
     "page",
     "stale",
     "fresh",
-    "cache"
+    "cache",
+    "modified",
+    "if-modified-since"
   ],
   "dependencies": {
     "async": "^2.6.0",
@@ -67,6 +68,7 @@
     "grunt-mocha-test": "^0.13.3",
     "jshint-stylish": "^2.2.1",
     "mocha": "^5.1.0",
+    "nodemon": "^1.17.3",
     "qs": "^6.5.1",
     "sinon": "^4.5.0",
     "sinon-chai": "^3.0.0",
