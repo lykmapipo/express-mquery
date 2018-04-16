@@ -19,6 +19,7 @@ app.use(mquery());
 //handle requests
 app.get('/', function (request, response) {
   const options = _.merge({}, request.mquery);
+  console.log(options);
   response.json(options);
 });
 

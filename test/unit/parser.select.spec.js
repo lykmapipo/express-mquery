@@ -36,8 +36,7 @@ describe('select', function () {
     });
 
 
-    it('should parse object based projection', function (
-      done) {
+    it('should parse object based projection', function (done) {
       const fields = { name: 1, email: 1 };
       const query = { fields: fields };
 

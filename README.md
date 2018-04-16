@@ -45,6 +45,16 @@ app.get('/users', function(request, response, next) {
 
 });
 ```
+## Structure
+Once parse, `express-mquery` will extend `http request` with `mquery` field
+with the structure below
+
+```js
+GET /invoices?fields=number,amount&filter[name]=Bob&filter[amount][$gte]=1200&include=customer,items&fields[customer]=name,number&fields[items]=name,price&page[number]=1&page[size]=10&sort[number]=1&sort[amount]=-1
+
+
+```
+
 
 ## Querying
 All the following parameters `(sort, page, skip, limit, query, populate, select)` support the entire mongoose feature set.
