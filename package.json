@@ -1,6 +1,6 @@
 {
   "name": "express-mquery",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Expose mongoose query API through HTTP request",
   "main": "index.js",
   "scripts": {
@@ -17,10 +17,12 @@
     "url": "https://github.com/lykmapipo/express-mquery/issues"
   },
   "homepage": "https://github.com/lykmapipo/express-mquery",
-  "contributors": [{
-    "name": "lykmapipo",
-    "github": "https://github.com/lykmapipo"
-  }],
+  "contributors": [
+    {
+      "name": "lykmapipo",
+      "github": "https://github.com/lykmapipo"
+    }
+  ],
   "keywords": [
     "express",
     "mongoose",
