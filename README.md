@@ -47,11 +47,18 @@ app.get('/users', function(request, response, next) {
 ```
 ## Structure
 Once parse, `express-mquery` will extend `http request` with `mquery` field
-with the structure below
+
+Example:
 
 ```js
-GET /invoices?fields=number,amount&filter[name]=Bob&filter[amount][$gte]=1200&include=customer,items&fields[customer]=name,number&fields[items]=name,price&page[number]=1&page[size]=10&sort[number]=1&sort[amount]=-1
+GET /invoices?fields=number,amount&filter[name]=Bob
+&filter[amount][$gte]=1200&include=customer,items
+&fields[customer]=name,number&fields[items]=name,price
+&page[number]=1&page[size]=10&sort[number]=1&sort[amount]=-1
+```
 
+Will be parsed into:
+```js
 {
   filter: { name: "Bob", amount: { $gte: 1200 } },
   paginate: { limit: 10, skip: 0, page: 1 },
@@ -62,16 +69,21 @@ GET /invoices?fields=number,amount&filter[name]=Bob&filter[amount][$gte]=1200&in
   select: { number: 1, amount: 1 },
   sort: { number: 1, amount: -1 }
 }
-
 ```
+
+Where:
+- `filter` : Is valid `mongoose` criteria and can be passed to `find()`
+- `paginate` : Contains paging details that can be passed to `limit()`, `skip()`
+- `populate` : Is valid `mongoose` populate option and can be passed to `populate()`
+- `select` : Is valid `mongoose` project options and can be passed to `select()`
+- `sort` : Is valid `mongoose` sort options and can be passed to `sort()`
 
 
 ## Querying
-All the following parameters `(sort, page, skip, limit, query, populate, select)` support the entire mongoose feature set.
 
 >When passing values as objects or arrays in URLs, they must be valid JSON
 
-### Sort or Order
+### Sort
 ```js
 GET /customers?sort=name
 GET /customers?sort=-name
