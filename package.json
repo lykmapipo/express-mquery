@@ -1,6 +1,6 @@
 {
   "name": "express-mquery",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Expose mongoose query API through HTTP request",
   "main": "index.js",
   "scripts": {
@@ -54,26 +54,32 @@
     "modified",
     "if-modified-since"
   ],
+  "peerDependencies": {
+    "async": "^2.6.1",
+    "express": "^4.16.4",
+    "lodash": "^4.17.11"
+  },
   "dependencies": {
-    "async": "^2.6.0",
-    "auto-parse": "^1.5.1",
-    "express": "^4.16.3",
-    "lodash": "^4.17.5"
+    "auto-parse": "^1.5.1"
   },
   "devDependencies": {
-    "body-parser": "^1.18.2",
-    "chai": "^4.1.2",
+    "async": "^2.6.1",
+    "auto-parse": "^1.5.1",
+    "express": "^4.16.4",
+    "lodash": "^4.17.11",
+    "body-parser": "^1.18.3",
+    "chai": "^4.2.0",
     "faker": "^4.1.0",
-    "grunt": "^1.0.2",
-    "grunt-contrib-jshint": "^1.1.0",
-    "grunt-contrib-watch": "^1.0.0",
+    "grunt": "^1.0.3",
+    "grunt-contrib-jshint": "^2.0.0",
+    "grunt-contrib-watch": "^1.1.0",
     "grunt-mocha-test": "^0.13.3",
     "jshint-stylish": "^2.2.1",
-    "mocha": "^5.1.0",
-    "nodemon": "^1.17.3",
-    "qs": "^6.5.1",
-    "sinon": "^4.5.0",
-    "sinon-chai": "^3.0.0",
-    "supertest": "^3.0.0"
+    "mocha": "^5.2.0",
+    "nodemon": "^1.18.4",
+    "qs": "^6.5.2",
+    "sinon": "^7.0.0",
+    "sinon-chai": "^3.2.0",
+    "supertest": "^3.3.0"
   }
 }
