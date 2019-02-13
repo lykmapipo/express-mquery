@@ -54,18 +54,15 @@
     "modified",
     "if-modified-since"
   ],
-  "peerDependencies": {
-    "express": ">=4.16.4"
-  },
   "dependencies": {
-    "async": ">=2.6.1",
+    "async": ">=2.6.2",
+    "express": ">=4.16.4",
     "lodash": ">=4.17.11",
     "auto-parse": ">=1.6.0"
   },
   "devDependencies": {
     "body-parser": ">=1.18.3",
     "chai": "^4.2.0",
-    "express": ">=4.16.4",
     "faker": "^4.1.0",
     "grunt": "^1.0.3",
     "grunt-contrib-jshint": "^2.0.0",
@@ -74,8 +71,8 @@
     "jshint-stylish": "^2.2.1",
     "mocha": "^5.2.0",
     "qs": "^6.6.0",
-    "sinon": "^7.2.2",
+    "sinon": "^7.2.3",
     "sinon-chai": "^3.3.0",
-    "supertest": "^3.3.0"
+    "supertest": "^3.4.2"
   }
 }
