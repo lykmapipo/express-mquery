@@ -1,6 +1,6 @@
 {
   "name": "express-mquery",
-  "version": "1.1.6",
+  "version": "1.1.7",
   "description": "Expose mongoose query API through HTTP request",
   "main": "index.js",
   "scripts": {
