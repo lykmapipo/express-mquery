@@ -1,3 +1,9 @@
+#### 1.1.8 (2019-07-06)
+
+##### Chores
+
+* **deps:**  force latest version & audit fix ([fbdeb138](https://github.com/lykmapipo/express-mquery/commit/fbdeb1386beef01bec2d17ce8353386843e92532))
+
 #### 1.1.7 (2019-06-19)
 
 #### 1.1.6 (2019-06-10)
