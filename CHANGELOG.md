@@ -1,3 +1,9 @@
+#### 1.1.9 (2019-08-15)
+
+##### Chores
+
+* **deps:**  force latest version & audit fix ([c6e85039](https://github.com/lykmapipo/express-mquery/commit/c6e8503937e6257894273382bd2be5a61b086df1))
+
 #### 1.1.8 (2019-07-06)
 
 ##### Chores
