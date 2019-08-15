@@ -57,7 +57,7 @@
   "dependencies": {
     "async": ">=3.1.0",
     "express": ">=4.17.1",
-    "lodash": ">=4.17.11",
+    "lodash": ">=4.17.15",
     "auto-parse": ">=1.8.0"
   },
   "devDependencies": {
@@ -70,10 +70,11 @@
     "grunt-mocha-test": "^0.13.3",
     "handlebars": "^4.1.2",
     "jshint-stylish": "^2.2.1",
-    "mocha": "^6.1.4",
+    "lodash.template": "^4.5.0",
+    "mocha": "^6.2.0",
     "qs": "^6.7.0",
     "shelljs": "^0.8.3",
-    "sinon": "^7.3.2",
+    "sinon": "^7.4.1",
     "sinon-chai": "^3.3.0",
     "supertest": "^4.0.2"
   }
