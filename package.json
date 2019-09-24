@@ -68,13 +68,13 @@
     "grunt-contrib-jshint": "^2.1.0",
     "grunt-contrib-watch": "^1.1.0",
     "grunt-mocha-test": "^0.13.3",
-    "handlebars": "^4.2.0",
+    "handlebars": "^4.3.0",
     "jshint-stylish": "^2.2.1",
     "lodash.template": "^4.5.0",
     "mocha": "^6.2.0",
-    "qs": "^6.8.0",
+    "qs": "^6.9.0",
     "shelljs": "^0.8.3",
-    "sinon": "^7.4.2",
+    "sinon": "^7.5.0",
     "sinon-chai": "^3.3.0",
     "supertest": "^4.0.2"
   }
