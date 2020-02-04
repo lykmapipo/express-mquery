@@ -55,7 +55,7 @@
     "if-modified-since"
   ],
   "dependencies": {
-    "async": ">=3.1.0",
+    "async": ">=3.1.1",
     "express": ">=4.17.1",
     "lodash": ">=4.17.15",
     "auto-parse": ">=1.8.0"
@@ -71,7 +71,7 @@
     "handlebars": "^4.7.2",
     "jshint-stylish": "^2.2.1",
     "lodash.template": "^4.5.0",
-    "mocha": "^7.0.0",
+    "mocha": "^7.0.1",
     "qs": "^6.9.1",
     "shelljs": "^0.8.3",
     "sinon": "^8.1.1",
