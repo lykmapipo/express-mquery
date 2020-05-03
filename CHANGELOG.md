@@ -1,3 +1,9 @@
+#### 1.2.0 (2020-05-03)
+
+##### Refactors
+
+*  use lates uuid api ([04f419c4](https://github.com/lykmapipo/express-mquery/commit/04f419c4b0525d8aaae514542f5003669624bfcd))
+
 #### 1.1.27 (2020-04-24)
 
 #### 1.1.26 (2020-04-18)
