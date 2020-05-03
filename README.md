@@ -12,6 +12,10 @@ Expose [mongoose](https://github.com/Automattic/mongoose) query API through HTTP
 
 *Note: Due to refactoring, you must install [mongoose-rest-actions](https://github.com/lykmapipo/mongoose-rest-actions) to have back mongoose plugin*
 
+## Requirements
+
+- [NodeJS v13.14+](https://nodejs.org)
+
 ## Installation
 ```js
 $ npm install --save express-mquery mongoose-rest-actions
