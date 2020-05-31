@@ -71,7 +71,7 @@
     "handlebars": "^4.7.6",
     "jshint-stylish": "^2.2.1",
     "lodash.template": "^4.5.0",
-    "mocha": "^7.1.2",
+    "mocha": "^7.2.0",
     "qs": "^6.9.4",
     "shelljs": "^0.8.4",
     "sinon": "^9.0.2",
