@@ -57,14 +57,14 @@
   "dependencies": {
     "async": ">=3.2.0",
     "express": ">=4.17.1",
-    "lodash": ">=4.17.15",
+    "lodash": ">=4.17.19",
     "auto-parse": ">=1.8.0"
   },
   "devDependencies": {
     "body-parser": ">=1.19.0",
     "chai": "^4.2.0",
     "faker": "^4.1.0",
-    "grunt": "^1.1.0",
+    "grunt": "^1.2.1",
     "grunt-contrib-jshint": "^2.1.0",
     "grunt-contrib-watch": "^1.1.0",
     "grunt-mocha-test": "^0.13.3",
