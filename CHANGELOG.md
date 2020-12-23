@@ -1,3 +1,11 @@
+#### 1.2.13 (2020-12-23)
+
+##### Chores
+
+* **deps:**
+  *  force latest version & audit fix ([999aff44](https://github.com/lykmapipo/express-mquery/commit/999aff4405b5bac063c9e22a9a53111d01558254))
+  *  bump ini from 1.3.5 to 1.3.7 ([4917b97e](https://github.com/lykmapipo/express-mquery/commit/4917b97e097d6563c6a00cc19edbc2488c918e76))
+
 #### 1.2.12 (2020-09-13)
 
 ##### Chores
