@@ -561,25 +561,25 @@ export const parse = (string, done) => {
         select: (next) => select(json, next),
         sort: (next) => sort(json, next),
       },
-      (error, mquery) => {
-        if (mquery) {
+      (error, payload) => {
+        if (payload) {
           // remove unused
           // eslint-disable-next-line no-param-reassign
-          delete mquery.maxLimit;
+          delete payload.maxLimit;
 
           // remove populations in selects
-          if (mquery.populate && mquery.select) {
-            const populations = _.map(mquery.populate, 'path');
+          if (payload.populate && payload.select) {
+            const populations = _.map(payload.populate, 'path');
             // eslint-disable-next-line no-param-reassign
-            mquery.select = _.omit(mquery.select, populations);
+            payload.select = _.omit(payload.select, populations);
           }
 
           // compact
           // eslint-disable-next-line no-param-reassign
-          mquery = _.omitBy(mquery, _.isEmpty);
+          payload = _.omitBy(payload, _.isEmpty);
         }
 
-        done(error, mquery);
+        done(error, payload);
       }
     );
   } catch (error) {
@@ -599,15 +599,14 @@ export const parse = (string, done) => {
  * @returns {Function[]} valid express middleware stack
  * @example
  *
- * const expess = require('express');
- * const mquery = require('express-mquery');
+ * import express from 'express';
+ * import {mquery} from 'express-mquery';
  *
  *
  * const app = express();
  * app.use(mquery({limit: 10, maxLimit: 50}));
  *
  */
-
 export const mquery = (optns) => {
   // normalize options
   const options = _.merge(
@@ -620,22 +619,22 @@ export const mquery = (optns) => {
   );
 
   // pack & return middlewares stack
-  const prepareMquery = (request, response, next) => {
-    const query = _.merge(
-      {},
-      options,
-      { headers: request.header },
-      request.query
-    );
-    parse(query, (error, data) => {
-      if (data && !_.isEmpty(data)) {
-        request.mquery = data;
-      }
-      next(error, data);
-    });
-  };
-
-  return [prepareMquery];
+  return [
+    (request, response, next) => {
+      const query = _.merge(
+        {},
+        options,
+        { headers: request.headers },
+        request.query
+      );
+      parse(query, (error, data) => {
+        if (data && !_.isEmpty(data)) {
+          request.mquery = data;
+        }
+        next(error, data);
+      });
+    },
+  ];
 };
 
 export default mquery;
