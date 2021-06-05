@@ -82,6 +82,12 @@
     "dot-prop": "^6.0.1",
     "faker": "^5.4.0",
     "eslint": "^7.22.0",
+    "@commitlint/cli": "^12.0.1",
+    "@commitlint/config-conventional": "^12.0.1",
+    "@commitlint/travis-cli": "^12.0.1",
+    "commitizen": "^4.2.3",
+    "husky": "^5.1.3",
+    "lint-staged": "^10.5.4",
     "eslint-config-airbnb-base": "^14.2.1",
     "eslint-config-prettier": "^8.1.0",
     "eslint-plugin-import": "^2.22.1",
@@ -99,5 +105,27 @@
     "sinon-chai": "^3.5.0",
     "supertest": "^6.1.3",
     "websocket-extensions": "^0.1.4"
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
+  },
+  "commitlint": {
+    "extends": [
+      "@commitlint/config-conventional"
+    ]
+  },
+  "lint-staged": {
+    "src/**/*.js": [
+      "npm run lint",
+      "git add -A"
+    ]
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged",
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
+    }
   }
 }
