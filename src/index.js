@@ -420,35 +420,31 @@ export const populate = (options, done) => {
     async.waterfall(
       [
         // parse field selections
-        function parseSelect(next) {
+        (next) => {
           select(query, next);
         },
 
         // normalize populations
-        function normalize(selections, next) {
-          populations = _.map(populations, (population) => {
-            return (cb) => {
-              // obtain population selected fields
-              const fields = selections
-                ? selections[population.path]
-                : undefined;
-              if (fields) {
-                // eslint-disable-next-line no-param-reassign
-                population = _.merge({}, population, { select: fields });
-              }
+        (selections, next) => {
+          populations = _.map(populations, (population) => (cb) => {
+            // obtain population selected fields
+            const fields = selections ? selections[population.path] : undefined;
+            if (fields) {
+              // eslint-disable-next-line no-param-reassign
+              population = _.merge({}, population, { select: fields });
+            }
 
-              // parse path specific select
-              if (population.select) {
-                select(population, (error, data) => {
-                  cb(error, _.merge({}, population, { data }));
-                });
-              }
+            // parse path specific select
+            if (population.select) {
+              select(population, (error, data) => {
+                cb(error, _.merge({}, population, { select: data }));
+              });
+            }
 
-              // continue
-              else {
-                cb(null, population);
-              }
-            };
+            // continue
+            else {
+              cb(null, population);
+            }
           });
 
           async.parallel(populations, next);
