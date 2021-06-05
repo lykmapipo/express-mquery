@@ -1,20 +1,15 @@
-'use strict';
+import chai from 'chai';
+import * as parser from '../../src';
 
+const { expect } = chai;
 
-//global imports
-const path = require('path');
-const chai = require('chai');
-const expect = chai.expect;
-const parser = require(path.join(__dirname, '..', '..', 'lib', 'parser'));
-
-describe('parser', function () {
-
-  it('should be an object', function () {
+describe('parser', () => {
+  it('should be an object', () => {
     expect(parser).to.exist;
     expect(parser).to.be.an('object');
   });
 
-  it('should have all required parser', function () {
+  it('should have all required parser', () => {
     expect(parser.filter).to.exist;
     expect(parser.filter).to.be.a('function');
 
@@ -32,7 +27,5 @@ describe('parser', function () {
 
     expect(parser.sort).to.exist;
     expect(parser.sort).to.be.a('function');
-
   });
-
 });
