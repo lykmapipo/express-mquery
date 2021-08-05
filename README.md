@@ -2,6 +2,14 @@ express-mquery
 ====================
 
 [![Build Status](https://travis-ci.org/lykmapipo/express-mquery.svg?branch=master)](https://travis-ci.org/lykmapipo/express-mquery)
+[![Dependencies Status](https://david-dm.org/lykmapipo/express-mquery.svg)](https://david-dm.org/lykmapipo/express-mquery)
+[![Coverage Status](https://coveralls.io/repos/github/lykmapipo/express-mquery/badge.svg?branch=master)](https://coveralls.io/github/lykmapipo/express-mquery?branch=master)
+[![GitHub License](https://img.shields.io/github/license/lykmapipo/express-mquery)](https://github.com/lykmapipo/express-mquery/blob/master/LICENSE)
+
+[![Commitizen Friendly](https://img.shields.io/badge/commitizen-friendly-brightgreen.svg)](http://commitizen.github.io/cz-cli/)
+[![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg)](https://github.com/prettier/prettier)
+[![Code Style](https://badgen.net/badge/code%20style/airbnb/ff5a5f?icon=airbnb)](https://github.com/airbnb/javascript)
+[![npm version](https://img.shields.io/npm/v/express-mquery)](https://www.npmjs.com/package/express-mquery)
 
 Expose [mongoose](https://github.com/Automattic/mongoose) query API through HTTP request with partial support of [json-api](http://jsonapi.org/): 
  - [sparse-fieldsets](http://jsonapi.org/format/#fetching-sparse-fieldsets)
@@ -11,10 +19,6 @@ Expose [mongoose](https://github.com/Automattic/mongoose) query API through HTTP
  - [includes](http://jsonapi.org/format/#fetching-includes)
 
 *Note: Checkout the current [specification](https://github.com/lykmapipo/express-mquery/blob/master/SPECIFICATION.md) for more information.*
-
-## Requirements
-
-- [NodeJS v13.14+](https://nodejs.org)
 
 ## Installation
 ```js
@@ -186,7 +190,7 @@ Fork this repo and push in your ideas. Do not forget to add a bit of test(s) of 
 
 ## Licence
 
-Copyright (c) 2015 lykmapipo & Contributors
+Copyright (c) lykmapipo & Contributors
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the “Software”), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 
