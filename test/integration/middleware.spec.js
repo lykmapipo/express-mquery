@@ -1,28 +1,23 @@
-'use strict';
+import chai from 'chai';
+import express from 'express';
+import request from 'supertest';
+import { mquery } from '../../src';
 
-//dependencies
-//global imports
-const path = require('path');
-const chai = require('chai');
-const express = require('express');
-const request = require('supertest');
-const expect = chai.expect;
-const mquery = require(path.join(__dirname, '..', '..'));
+const { expect } = chai;
 
-describe('middleware', function () {
-
+describe('middleware', () => {
   const app = express();
   app.use(mquery({ limit: 10, maxLimit: 50 }));
-  app.use('/mquery', function (request, response) {
-    response.json(request.mquery);
+  app.use('/mquery', (req, response) => {
+    response.json(req.mquery);
   });
 
-  it('should parse search options', function (done) {
+  it('should parse search options', (done) => {
     request(app)
       .get('/mquery?q=mquery')
-      .expect(200, function (error, response) {
+      .expect(200, (error, response) => {
         expect(error).to.not.exist;
-        const body = response.body;
+        const { body } = response;
         expect(body).to.exist;
         expect(body.filter).to.exist;
         expect(body.filter.q).to.exist;
@@ -31,12 +26,12 @@ describe('middleware', function () {
       });
   });
 
-  it('should parse filter options', function (done) {
+  it('should parse filter options', (done) => {
     request(app)
       .get('/mquery?filter[age]=10&filter[year]=2018')
-      .expect(200, function (error, response) {
+      .expect(200, (error, response) => {
         expect(error).to.not.exist;
-        const body = response.body;
+        const { body } = response;
         expect(body).to.exist;
         expect(body.filter).to.exist;
         expect(body.filter.age).to.exist;
@@ -47,12 +42,12 @@ describe('middleware', function () {
       });
   });
 
-  it('should parse filter options', function (done) {
+  it('should parse filter options', (done) => {
     request(app)
       .get('/mquery?filter[age][$gte]=10&filter[year][$eq]=2018')
-      .expect(200, function (error, response) {
+      .expect(200, (error, response) => {
         expect(error).to.not.exist;
-        const body = response.body;
+        const { body } = response;
         expect(body).to.exist;
         expect(body.filter).to.exist;
         expect(body.filter.age).to.exist;
@@ -63,12 +58,12 @@ describe('middleware', function () {
       });
   });
 
-  it('should parse page options', function (done) {
+  it('should parse page options', (done) => {
     request(app)
       .get('/mquery')
-      .expect(200, function (error, response) {
+      .expect(200, (error, response) => {
         expect(error).to.not.exist;
-        const body = response.body;
+        const { body } = response;
         expect(body).to.exist;
         expect(body.paginate).to.exist;
         expect(body.paginate.page).to.exist;
@@ -78,12 +73,12 @@ describe('middleware', function () {
       });
   });
 
-  it('should parse page options', function (done) {
+  it('should parse page options', (done) => {
     request(app)
       .get('/mquery?page=1&limit=20&skip=20')
-      .expect(200, function (error, response) {
+      .expect(200, (error, response) => {
         expect(error).to.not.exist;
-        const body = response.body;
+        const { body } = response;
         expect(body).to.exist;
         expect(body.paginate).to.exist;
         expect(body.paginate.page).to.exist;
@@ -96,12 +91,12 @@ describe('middleware', function () {
       });
   });
 
-  it('should parse page options', function (done) {
+  it('should parse page options', (done) => {
     request(app)
       .get('/mquery?page=1&limit=100&skip=20')
-      .expect(200, function (error, response) {
+      .expect(200, (error, response) => {
         expect(error).to.not.exist;
-        const body = response.body;
+        const { body } = response;
         expect(body).to.exist;
         expect(body.paginate).to.exist;
         expect(body.paginate.page).to.exist;
@@ -114,12 +109,12 @@ describe('middleware', function () {
       });
   });
 
-  it('should parse page options', function (done) {
+  it('should parse page options', (done) => {
     request(app)
       .get('/mquery?page=-1&limit=-10&skip=-20')
-      .expect(200, function (error, response) {
+      .expect(200, (error, response) => {
         expect(error).to.not.exist;
-        const body = response.body;
+        const { body } = response;
         expect(body).to.exist;
         expect(body.paginate).to.exist;
         expect(body.paginate.page).to.exist;
@@ -132,12 +127,12 @@ describe('middleware', function () {
       });
   });
 
-  it('should parse page options', function (done) {
+  it('should parse page options', (done) => {
     request(app)
       .get('/mquery?page[number]=2&page[limit]=20&page[skip]=20')
-      .expect(200, function (error, response) {
+      .expect(200, (error, response) => {
         expect(error).to.not.exist;
-        const body = response.body;
+        const { body } = response;
         expect(body).to.exist;
         expect(body.paginate).to.exist;
         expect(body.paginate.page).to.exist;
@@ -150,14 +145,13 @@ describe('middleware', function () {
       });
   });
 
-
-  it('should parse populate options', function (done) {
+  it('should parse populate options', (done) => {
     const populate = [{ path: 'father' }, { path: 'mother' }];
     request(app)
       .get('/mquery?populate=father,mother')
-      .expect(200, function (error, response) {
+      .expect(200, (error, response) => {
         expect(error).to.not.exist;
-        const body = response.body;
+        const { body } = response;
         expect(body).to.exist;
         expect(body.populate).to.exist;
         expect(body.populate).to.be.eql(populate);
@@ -165,13 +159,13 @@ describe('middleware', function () {
       });
   });
 
-  it('should parse populate options', function (done) {
+  it('should parse populate options', (done) => {
     const populate = [{ path: 'father' }, { path: 'mother' }];
     request(app)
       .get('/mquery?include=father,mother')
-      .expect(200, function (error, response) {
+      .expect(200, (error, response) => {
         expect(error).to.not.exist;
-        const body = response.body;
+        const { body } = response;
         expect(body).to.exist;
         expect(body.populate).to.exist;
         expect(body.populate).to.be.eql(populate);
@@ -179,13 +173,16 @@ describe('middleware', function () {
       });
   });
 
-  it('should parse populate options', function (done) {
-    const populate = [{ path: 'father' }, { path: 'mother', select: { name: 1 } }];
+  it('should parse populate options', (done) => {
+    const populate = [
+      { path: 'father' },
+      { path: 'mother', select: { name: 1 } },
+    ];
     request(app)
       .get('/mquery?include=father,mother&fields[mother]=name')
-      .expect(200, function (error, response) {
+      .expect(200, (error, response) => {
         expect(error).to.not.exist;
-        const body = response.body;
+        const { body } = response;
         expect(body).to.exist;
         expect(body.populate).to.exist;
         expect(body.populate).to.be.eql(populate);
@@ -193,13 +190,13 @@ describe('middleware', function () {
       });
   });
 
-  it('should parse select options', function (done) {
+  it('should parse select options', (done) => {
     const select = { name: 1, age: 1, year: 0 };
     request(app)
       .get('/mquery?select=name,age,-year')
-      .expect(200, function (error, response) {
+      .expect(200, (error, response) => {
         expect(error).to.not.exist;
-        const body = response.body;
+        const { body } = response;
         expect(body).to.exist;
         expect(body.select).to.exist;
         expect(body.select).to.be.eql(select);
@@ -207,13 +204,13 @@ describe('middleware', function () {
       });
   });
 
-  it('should parse select options', function (done) {
+  it('should parse select options', (done) => {
     const select = { 'name.firstname': 1, age: 1, year: 0 };
     request(app)
       .get('/mquery?select=name.firstname,age,-year')
-      .expect(200, function (error, response) {
+      .expect(200, (error, response) => {
         expect(error).to.not.exist;
-        const body = response.body;
+        const { body } = response;
         expect(body).to.exist;
         expect(body.select).to.exist;
         expect(body.select).to.be.eql(select);
@@ -221,19 +218,17 @@ describe('middleware', function () {
       });
   });
 
-
-  it('should parse sort options', function (done) {
+  it('should parse sort options', (done) => {
     const sort = { name: -1, age: 1, year: -1 };
     request(app)
       .get('/mquery?sort=-name,age,-year')
-      .expect(200, function (error, response) {
+      .expect(200, (error, response) => {
         expect(error).to.not.exist;
-        const body = response.body;
+        const { body } = response;
         expect(body).to.exist;
         expect(body.sort).to.exist;
         expect(body.sort).to.be.eql(sort);
         done(error, response);
       });
   });
-
 });
