@@ -1,16 +1,16 @@
 import chai from 'chai';
 import express from 'express';
 import request from 'supertest';
-import * as parser from '../../src';
+import { select as parseSelects } from '../../src/internals';
 
 const { expect } = chai;
 
 describe('select', () => {
   it('should be a function', () => {
-    expect(parser.select).to.exist;
-    expect(parser.select).to.be.a('function');
-    expect(parser.select.name).to.be.equal('select');
-    expect(parser.select.length).to.be.equal(2);
+    expect(parseSelects).to.exist;
+    expect(parseSelects).to.be.a('function');
+    expect(parseSelects.name).to.be.equal('select');
+    expect(parseSelects.length).to.be.equal(2);
   });
 
   describe('fields', () => {
@@ -18,7 +18,7 @@ describe('select', () => {
       const fields = { name: 1, email: 1 };
       const query = { fields };
 
-      parser.select(JSON.stringify(query), (error, projection) => {
+      parseSelects(JSON.stringify(query), (error, projection) => {
         expect(error).to.not.exist;
         expect(projection).to.exist;
         expect(projection).to.eql(fields);
@@ -30,7 +30,7 @@ describe('select', () => {
       const fields = { name: 1, email: 1 };
       const query = { fields };
 
-      parser.select(query, (error, projection) => {
+      parseSelects(query, (error, projection) => {
         expect(error).to.not.exist;
         expect(projection).to.exist;
         expect(projection).to.eql(fields);
@@ -42,7 +42,7 @@ describe('select', () => {
       const fields = { name: 1, email: 1 };
       const query = { fields: 'name,email' };
 
-      parser.select(JSON.stringify(query), (error, projection) => {
+      parseSelects(JSON.stringify(query), (error, projection) => {
         expect(error).to.not.exist;
         expect(projection).to.exist;
         expect(projection).to.eql(fields);
@@ -54,7 +54,7 @@ describe('select', () => {
       const fields = { name: 0, email: 0 };
       const query = { fields: '-name,-email' };
 
-      parser.select(query, (error, projection) => {
+      parseSelects(query, (error, projection) => {
         expect(error).to.not.exist;
         expect(projection).to.exist;
         expect(projection).to.eql(fields);
@@ -68,7 +68,7 @@ describe('select', () => {
       const select = { name: 1, email: 1 };
       const query = { select };
 
-      parser.select(JSON.stringify(query), (error, projection) => {
+      parseSelects(JSON.stringify(query), (error, projection) => {
         expect(error).to.not.exist;
         expect(projection).to.exist;
         expect(projection).to.eql(select);
@@ -80,7 +80,7 @@ describe('select', () => {
       const select = { name: 1, email: 1 };
       const query = { select };
 
-      parser.select(query, (error, projection) => {
+      parseSelects(query, (error, projection) => {
         expect(error).to.not.exist;
         expect(projection).to.exist;
         expect(projection).to.eql(select);
@@ -92,7 +92,7 @@ describe('select', () => {
       const select = { name: 1, email: 1 };
       const query = { select: 'name,email' };
 
-      parser.select(JSON.stringify(query), (error, projection) => {
+      parseSelects(JSON.stringify(query), (error, projection) => {
         expect(error).to.not.exist;
         expect(projection).to.exist;
         expect(projection).to.eql(select);
@@ -104,7 +104,7 @@ describe('select', () => {
       const select = { name: 0, email: 0 };
       const query = { select: '-name,-email' };
 
-      parser.select(query, (error, projection) => {
+      parseSelects(query, (error, projection) => {
         expect(error).to.not.exist;
         expect(projection).to.exist;
         expect(projection).to.eql(select);
@@ -116,7 +116,7 @@ describe('select', () => {
   describe('http', () => {
     const app = express();
     app.use('/select', (req, response) => {
-      parser.select(req.query, (error, projections) => {
+      parseSelects(req.query, (error, projections) => {
         if (error) {
           throw error;
         } else {

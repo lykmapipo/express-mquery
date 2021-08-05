@@ -1,6 +1,8 @@
-import _ from 'lodash';
+import { merge } from 'lodash';
 import express from 'express';
-import { mquery } from '../src';
+import mquery from '../src';
+
+const PORT = 3000;
 
 // prepare express app
 const app = express();
@@ -10,16 +12,15 @@ app.use(mquery());
 
 // handle requests
 app.get('/', (request, response) => {
-  const options = _.merge({}, request.mquery);
+  const options = merge({}, request.mquery);
   response.json(options);
 });
 
-const PORT = 3000;
+// run express app
 app.listen(PORT, (error) => {
   if (error) {
     throw error;
   } else {
-    // eslint-disable-next-line no-console
     console.log(`visit http://0.0.0.0:${PORT}`);
   }
 });

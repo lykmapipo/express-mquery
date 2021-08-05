@@ -1,24 +1,24 @@
-import { _ } from 'lodash';
+import { get } from 'lodash';
 import chai from 'chai';
 import express from 'express';
 import request from 'supertest';
-import * as parser from '../../src';
+import { paginate as parsePaginations } from '../../src/internals';
 
 const { expect } = chai;
 
 describe('paginate', () => {
   it('should be a function', () => {
-    expect(parser.paginate).to.exist;
-    expect(parser.paginate).to.be.a('function');
-    expect(parser.paginate.name).to.be.equal('paginate');
-    expect(parser.paginate.length).to.be.equal(2);
+    expect(parsePaginations).to.exist;
+    expect(parsePaginations).to.be.a('function');
+    expect(parsePaginations.name).to.be.equal('paginate');
+    expect(parsePaginations.length).to.be.equal(2);
   });
 
   describe('limit', () => {
     it('should parse limit when not specified', (done) => {
       const query = {};
 
-      parser.paginate(JSON.stringify(query), (error, paginate) => {
+      parsePaginations(JSON.stringify(query), (error, paginate) => {
         expect(error).to.not.exist;
         expect(paginate).to.exist;
         expect(paginate.limit).to.exist;
@@ -30,7 +30,7 @@ describe('paginate', () => {
     it('should parse limit', (done) => {
       const query = { limit: 10 };
 
-      parser.paginate(JSON.stringify(query), (error, paginate) => {
+      parsePaginations(JSON.stringify(query), (error, paginate) => {
         expect(error).to.not.exist;
         expect(paginate).to.exist;
         expect(paginate.limit).to.exist;
@@ -42,7 +42,7 @@ describe('paginate', () => {
     it('should parse limit from max', (done) => {
       const query = { max: 10 };
 
-      parser.paginate(JSON.stringify(query), (error, paginate) => {
+      parsePaginations(JSON.stringify(query), (error, paginate) => {
         expect(error).to.not.exist;
         expect(paginate).to.exist;
         expect(paginate.limit).to.exist;
@@ -54,7 +54,7 @@ describe('paginate', () => {
     it('should parse limit from size', (done) => {
       const query = { size: 10 };
 
-      parser.paginate(JSON.stringify(query), (error, paginate) => {
+      parsePaginations(JSON.stringify(query), (error, paginate) => {
         expect(error).to.not.exist;
         expect(paginate).to.exist;
         expect(paginate.limit).to.exist;
@@ -66,7 +66,7 @@ describe('paginate', () => {
     it('should parse limit from size', (done) => {
       const query = { page: { size: 10 } };
 
-      parser.paginate(JSON.stringify(query), (error, paginate) => {
+      parsePaginations(JSON.stringify(query), (error, paginate) => {
         expect(error).to.not.exist;
         expect(paginate).to.exist;
         expect(paginate.limit).to.exist;
@@ -78,7 +78,7 @@ describe('paginate', () => {
     it('should parse limit from rpp', (done) => {
       const query = { rpp: 10 };
 
-      parser.paginate(JSON.stringify(query), (error, paginate) => {
+      parsePaginations(JSON.stringify(query), (error, paginate) => {
         expect(error).to.not.exist;
         expect(paginate).to.exist;
         expect(paginate.limit).to.exist;
@@ -90,7 +90,7 @@ describe('paginate', () => {
     it('should parse limit from count', (done) => {
       const query = { count: 10 };
 
-      parser.paginate(JSON.stringify(query), (error, paginate) => {
+      parsePaginations(JSON.stringify(query), (error, paginate) => {
         expect(error).to.not.exist;
         expect(paginate).to.exist;
         expect(paginate.limit).to.exist;
@@ -102,7 +102,7 @@ describe('paginate', () => {
     it('should parse limit from perPage', (done) => {
       const query = { perPage: 10 };
 
-      parser.paginate(JSON.stringify(query), (error, paginate) => {
+      parsePaginations(JSON.stringify(query), (error, paginate) => {
         expect(error).to.not.exist;
         expect(paginate).to.exist;
         expect(paginate.limit).to.exist;
@@ -116,11 +116,11 @@ describe('paginate', () => {
         per_page: 10,
       };
 
-      parser.paginate(JSON.stringify(query), (error, paginate) => {
+      parsePaginations(JSON.stringify(query), (error, paginate) => {
         expect(error).to.not.exist;
         expect(paginate).to.exist;
         expect(paginate.limit).to.exist;
-        expect(paginate.limit).to.be.eql(_.get(query, 'per_page'));
+        expect(paginate.limit).to.be.eql(get(query, 'per_page'));
         done(error, paginate);
       });
     });
@@ -130,7 +130,7 @@ describe('paginate', () => {
         cursor: 10,
       };
 
-      parser.paginate(JSON.stringify(query), (error, paginate) => {
+      parsePaginations(JSON.stringify(query), (error, paginate) => {
         expect(error).to.not.exist;
         expect(paginate).to.exist;
         expect(paginate.limit).to.exist;
@@ -144,7 +144,7 @@ describe('paginate', () => {
     it('should parse skip when not specified', (done) => {
       const query = {};
 
-      parser.paginate(JSON.stringify(query), (error, paginate) => {
+      parsePaginations(JSON.stringify(query), (error, paginate) => {
         expect(error).to.not.exist;
         expect(paginate).to.exist;
         expect(paginate.skip).to.exist;
@@ -156,7 +156,7 @@ describe('paginate', () => {
     it('should parse skip', (done) => {
       const query = { skip: 10 };
 
-      parser.paginate(JSON.stringify(query), (error, paginate) => {
+      parsePaginations(JSON.stringify(query), (error, paginate) => {
         expect(error).to.not.exist;
         expect(paginate).to.exist;
         expect(paginate.skip).to.exist;
@@ -168,7 +168,7 @@ describe('paginate', () => {
     it('should parse skip from offset', (done) => {
       const query = { offset: 10 };
 
-      parser.paginate(JSON.stringify(query), (error, paginate) => {
+      parsePaginations(JSON.stringify(query), (error, paginate) => {
         expect(error).to.not.exist;
         expect(paginate).to.exist;
         expect(paginate.skip).to.exist;
@@ -180,7 +180,7 @@ describe('paginate', () => {
     it('should parse skip from start', (done) => {
       const query = { start: 10 };
 
-      parser.paginate(JSON.stringify(query), (error, paginate) => {
+      parsePaginations(JSON.stringify(query), (error, paginate) => {
         expect(error).to.not.exist;
         expect(paginate).to.exist;
         expect(paginate.skip).to.exist;
@@ -192,7 +192,7 @@ describe('paginate', () => {
     it('should parse skip from page', (done) => {
       const query = { page: 5 };
 
-      parser.paginate(JSON.stringify(query), (error, paginate) => {
+      parsePaginations(JSON.stringify(query), (error, paginate) => {
         expect(error).to.not.exist;
         expect(paginate).to.exist;
         expect(paginate.skip).to.exist;
@@ -205,7 +205,7 @@ describe('paginate', () => {
     it('should parse skip from page offset', (done) => {
       const query = { page: { offset: 5 } };
 
-      parser.paginate(JSON.stringify(query), (error, paginate) => {
+      parsePaginations(JSON.stringify(query), (error, paginate) => {
         expect(error).to.not.exist;
         expect(paginate).to.exist;
         expect(paginate.skip).to.exist;
@@ -219,7 +219,7 @@ describe('paginate', () => {
     it('should parse page when not specified', (done) => {
       const query = {};
 
-      parser.paginate(JSON.stringify(query), (error, paginate) => {
+      parsePaginations(JSON.stringify(query), (error, paginate) => {
         expect(error).to.not.exist;
         expect(paginate).to.exist;
         expect(paginate.page).to.exist;
@@ -231,7 +231,7 @@ describe('paginate', () => {
     it('should parse page', (done) => {
       const query = { page: 10 };
 
-      parser.paginate(JSON.stringify(query), (error, paginate) => {
+      parsePaginations(JSON.stringify(query), (error, paginate) => {
         expect(error).to.not.exist;
         expect(paginate).to.exist;
         expect(paginate.page).to.exist;
@@ -243,7 +243,7 @@ describe('paginate', () => {
     it('should parse page number and page size', (done) => {
       const query = { number: 10, size: 10 };
 
-      parser.paginate(JSON.stringify(query), (error, paginate) => {
+      parsePaginations(JSON.stringify(query), (error, paginate) => {
         expect(error).to.not.exist;
         expect(paginate).to.exist;
         expect(paginate.page).to.exist;
@@ -257,7 +257,7 @@ describe('paginate', () => {
     it('should parse page and skip', (done) => {
       const query = { page: 1, skip: 1000 };
 
-      parser.paginate(JSON.stringify(query), (error, paginate) => {
+      parsePaginations(JSON.stringify(query), (error, paginate) => {
         expect(error).to.not.exist;
         expect(paginate).to.exist;
         expect(paginate.page).to.exist;
@@ -273,7 +273,7 @@ describe('paginate', () => {
   describe('http', () => {
     const app = express();
     app.use('/paginations', (req, response) => {
-      parser.paginate(req.query, (error, paginate) => {
+      parsePaginations(req.query, (error, paginate) => {
         if (error) {
           throw error;
         } else {
@@ -424,7 +424,7 @@ describe('paginate', () => {
             const paginate = response.body;
             expect(paginate).to.exist;
             expect(paginate.limit).to.exist;
-            expect(paginate.limit).to.be.eql(_.get(query, 'per_page'));
+            expect(paginate.limit).to.be.eql(get(query, 'per_page'));
             done(error, response);
           });
       });

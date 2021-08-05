@@ -1,7 +1,7 @@
 import chai from 'chai';
 import express from 'express';
 import request from 'supertest';
-import { mquery } from '../../src';
+import mquery from '../../src';
 
 const { expect } = chai;
 

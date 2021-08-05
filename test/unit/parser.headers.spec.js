@@ -1,17 +1,17 @@
-import { _ } from 'lodash';
+import { merge } from 'lodash';
 import chai from 'chai';
 import express from 'express';
 import request from 'supertest';
-import * as parser from '../../src';
+import { headers as parseHeaders } from '../../src/internals';
 
 const { expect } = chai;
 
 describe('headers', () => {
   it('should be a function', () => {
-    expect(parser.headers).to.exist;
-    expect(parser.headers).to.be.a('function');
-    expect(parser.headers.name).to.be.equal('headers');
-    expect(parser.headers.length).to.be.equal(2);
+    expect(parseHeaders).to.exist;
+    expect(parseHeaders).to.be.a('function');
+    expect(parseHeaders.name).to.be.equal('headers');
+    expect(parseHeaders.length).to.be.equal(2);
   });
 
   it('should parse json based headers', (done) => {
@@ -24,7 +24,7 @@ describe('headers', () => {
       ifModifiedSince: new Date(query.headers['if-modified-since']),
     };
 
-    parser.headers(JSON.stringify(query), (error, headers) => {
+    parseHeaders(JSON.stringify(query), (error, headers) => {
       expect(error).to.not.exist;
       expect(headers).to.exist;
       expect(headers).to.eql(expected);
@@ -42,7 +42,7 @@ describe('headers', () => {
       ifModifiedSince: new Date(query.headers['if-modified-since']),
     };
 
-    parser.headers(query, (error, headers) => {
+    parseHeaders(query, (error, headers) => {
       expect(error).to.not.exist;
       expect(headers).to.exist;
       expect(headers).to.eql(expected);
@@ -53,8 +53,8 @@ describe('headers', () => {
   describe('http', () => {
     const app = express();
     app.use('/headers', (req, response) => {
-      const query = _.merge({}, req.query, { headers: req.headers });
-      parser.headers(query, (error, headers) => {
+      const query = merge({}, req.query, { headers: req.headers });
+      parseHeaders(query, (error, headers) => {
         if (error) {
           throw error;
         } else {

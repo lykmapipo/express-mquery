@@ -1,16 +1,16 @@
-import { _ } from 'lodash';
+import { forEach } from 'lodash';
 import qs from 'qs';
 import chai from 'chai';
 import express from 'express';
 import request from 'supertest';
-import * as parser from '../../src';
+import { filter as parseFilters } from '../../src/internals';
 
 const { expect } = chai;
 
 describe('filter', () => {
   const app = express();
   app.use('/filter', (req, response) => {
-    parser.filter(req.query, (error, projections) => {
+    parseFilters(req.query, (error, projections) => {
       if (error) {
         throw error;
       } else {
@@ -20,16 +20,16 @@ describe('filter', () => {
   });
 
   it('should be a function', () => {
-    expect(parser.filter).to.exist;
-    expect(parser.filter).to.be.a('function');
-    expect(parser.filter.name).to.be.equal('filter');
-    expect(parser.filter.length).to.be.equal(2);
+    expect(parseFilters).to.exist;
+    expect(parseFilters).to.be.a('function');
+    expect(parseFilters.name).to.be.equal('filter');
+    expect(parseFilters.length).to.be.equal(2);
   });
 
   describe('by search', () => {
     it('should parse search query', (done) => {
       const query = { filters: { q: 'a' } };
-      parser.filter(JSON.stringify(query), (error, filter) => {
+      parseFilters(JSON.stringify(query), (error, filter) => {
         expect(error).to.not.exist;
         expect(filter).to.exist;
         expect(filter.q).to.exist;
@@ -40,7 +40,7 @@ describe('filter', () => {
 
     it('should parse search query', (done) => {
       const query = { q: 'a' };
-      parser.filter(JSON.stringify(query), (error, filter) => {
+      parseFilters(JSON.stringify(query), (error, filter) => {
         expect(error).to.not.exist;
         expect(filter).to.exist;
         expect(filter.q).to.exist;
@@ -93,7 +93,7 @@ describe('filter', () => {
       $nin: { qty: { $nin: [5, 15] } },
     };
 
-    _.forEach(comparisons, (comparison, key) => {
+    forEach(comparisons, (comparison, key) => {
       const encoded = qs.stringify({ filters: comparison });
 
       it(`should parse fields ${key} operator`, (done) => {
@@ -106,7 +106,7 @@ describe('filter', () => {
           done(error, filter);
         };
 
-        parser.filter(JSON.stringify(query), next);
+        parseFilters(JSON.stringify(query), next);
       });
 
       it(`should parse ${key} http uri encoded query operator`, (done) => {
@@ -160,7 +160,7 @@ describe('filter', () => {
       $nor: { $nor: [{ price: 1.99 }, { sale: true }] },
     };
 
-    _.forEach(logicals, (logical, key) => {
+    forEach(logicals, (logical, key) => {
       const encoded = qs.stringify({ filters: logical });
 
       it(`should parse fields ${key} operator`, (done) => {
@@ -173,7 +173,7 @@ describe('filter', () => {
           done(error, filter);
         };
 
-        parser.filter(JSON.stringify(query), next);
+        parseFilters(JSON.stringify(query), next);
       });
 
       it(`should parse ${key} http uri encoded query operator`, (done) => {
@@ -225,7 +225,7 @@ describe('filter', () => {
       $type: { zipCode: { $type: 'string' } },
     };
 
-    _.forEach(elements, (element, key) => {
+    forEach(elements, (element, key) => {
       it(`should parse fields ${key} operator`, (done) => {
         const query = { filters: element };
 
@@ -236,7 +236,7 @@ describe('filter', () => {
           done(error, filter);
         };
 
-        parser.filter(JSON.stringify(query), next);
+        parseFilters(JSON.stringify(query), next);
       });
     });
   });
@@ -251,7 +251,7 @@ describe('filter', () => {
       $$where: {},
     };
 
-    _.forEach(evaluations, (evaluation, key) => {
+    forEach(evaluations, (evaluation, key) => {
       it(`should parse fields ${key} operator`, (done) => {
         const query = { filters: evaluation };
 
@@ -262,7 +262,7 @@ describe('filter', () => {
           done(error, filter);
         };
 
-        parser.filter(JSON.stringify(query), next);
+        parseFilters(JSON.stringify(query), next);
       });
     });
   });
@@ -373,7 +373,7 @@ describe('filter', () => {
       },
     };
 
-    _.forEach(geospatials, (geospatial, key) => {
+    forEach(geospatials, (geospatial, key) => {
       it(`should parse fields ${key} operator`, (done) => {
         const query = { filters: geospatial };
 
@@ -384,7 +384,7 @@ describe('filter', () => {
           done(error, filter);
         };
 
-        parser.filter(JSON.stringify(query), next);
+        parseFilters(JSON.stringify(query), next);
       });
     });
   });
@@ -400,7 +400,7 @@ describe('filter', () => {
       $size: { field: { $size: 1 } },
     };
 
-    _.forEach(arrays, (array, key) => {
+    forEach(arrays, (array, key) => {
       it(`should parse fields ${key} operator`, (done) => {
         const query = { filters: array };
 
@@ -411,7 +411,7 @@ describe('filter', () => {
           done(error, filter);
         };
 
-        parser.filter(JSON.stringify(query), next);
+        parseFilters(JSON.stringify(query), next);
       });
     });
   });

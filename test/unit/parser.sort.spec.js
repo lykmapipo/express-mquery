@@ -1,23 +1,23 @@
 import chai from 'chai';
 import express from 'express';
 import request from 'supertest';
-import * as parser from '../../src';
+import { sort as parseSorts } from '../../src/internals';
 
 const { expect } = chai;
 
 describe('sort', () => {
   it('should be a function', () => {
-    expect(parser.sort).to.exist;
-    expect(parser.sort).to.be.a('function');
-    expect(parser.sort.name).to.be.equal('sort');
-    expect(parser.sort.length).to.be.equal(2);
+    expect(parseSorts).to.exist;
+    expect(parseSorts).to.be.a('function');
+    expect(parseSorts.name).to.be.equal('sort');
+    expect(parseSorts.length).to.be.equal(2);
   });
 
   it('should parse json based sort', (done) => {
     const _sort = { name: 1, email: 1 };
     const query = { sort: _sort };
 
-    parser.sort(JSON.stringify(query), (error, sort) => {
+    parseSorts(JSON.stringify(query), (error, sort) => {
       expect(error).to.not.exist;
       expect(sort).to.exist;
       expect(sort).to.eql(_sort);
@@ -29,7 +29,7 @@ describe('sort', () => {
     const _sort = { name: 'desc', email: 'asc' };
     const query = { sort: _sort };
 
-    parser.sort(JSON.stringify(query), (error, sort) => {
+    parseSorts(JSON.stringify(query), (error, sort) => {
       expect(error).to.not.exist;
       expect(sort).to.exist;
       expect(sort).to.eql(_sort);
@@ -41,7 +41,7 @@ describe('sort', () => {
     const _sort = { name: 'descending', email: 'ascending' };
     const query = { sort: _sort };
 
-    parser.sort(JSON.stringify(query), (error, sort) => {
+    parseSorts(JSON.stringify(query), (error, sort) => {
       expect(error).to.not.exist;
       expect(sort).to.exist;
       expect(sort).to.eql(_sort);
@@ -53,7 +53,7 @@ describe('sort', () => {
     const _sort = { name: 1, email: 1 };
     const query = { sort: _sort };
 
-    parser.sort(query, (error, sort) => {
+    parseSorts(query, (error, sort) => {
       expect(error).to.not.exist;
       expect(sort).to.exist;
       expect(sort).to.eql(_sort);
@@ -65,7 +65,7 @@ describe('sort', () => {
     const _sort = { name: 'desc', email: 'asc' };
     const query = { sort: _sort };
 
-    parser.sort(query, (error, sort) => {
+    parseSorts(query, (error, sort) => {
       expect(error).to.not.exist;
       expect(sort).to.exist;
       expect(sort).to.eql(_sort);
@@ -77,7 +77,7 @@ describe('sort', () => {
     const _sort = { name: 'descending', email: 'ascending' };
     const query = { sort: _sort };
 
-    parser.sort(query, (error, sort) => {
+    parseSorts(query, (error, sort) => {
       expect(error).to.not.exist;
       expect(sort).to.exist;
       expect(sort).to.eql(_sort);
@@ -89,7 +89,7 @@ describe('sort', () => {
     const _sort = { name: 1, email: 1 };
     const query = { sort: 'name,email' };
 
-    parser.sort(JSON.stringify(query), (error, sort) => {
+    parseSorts(JSON.stringify(query), (error, sort) => {
       expect(error).to.not.exist;
       expect(sort).to.exist;
       expect(sort).to.eql(_sort);
@@ -101,7 +101,7 @@ describe('sort', () => {
     const _sort = { name: -1, email: -1 };
     const query = { sort: '-name,-email' };
 
-    parser.sort(query, (error, projection) => {
+    parseSorts(query, (error, projection) => {
       expect(error).to.not.exist;
       expect(projection).to.exist;
       expect(projection).to.eql(_sort);
@@ -112,7 +112,7 @@ describe('sort', () => {
   describe('http', () => {
     const app = express();
     app.use('/sort', (req, response) => {
-      parser.sort(req.query, (error, sorts) => {
+      parseSorts(req.query, (error, sorts) => {
         if (error) {
           throw error;
         } else {

@@ -1,14 +1,14 @@
 import chai from 'chai';
 import express from 'express';
 import request from 'supertest';
-import * as parser from '../../src';
+import { populate as parsePopulations } from '../../src/internals';
 
 const { expect } = chai;
 
 describe('populate', () => {
   const app = express();
   app.use('/populate', (req, response) => {
-    parser.populate(req.query, (error, projections) => {
+    parsePopulations(req.query, (error, projections) => {
       if (error) {
         throw error;
       } else {
@@ -18,17 +18,17 @@ describe('populate', () => {
   });
 
   it('should be a function', () => {
-    expect(parser.populate).to.exist;
-    expect(parser.populate).to.be.a('function');
-    expect(parser.populate.name).to.be.equal('populate');
-    expect(parser.populate.length).to.be.equal(2);
+    expect(parsePopulations).to.exist;
+    expect(parsePopulations).to.be.a('function');
+    expect(parsePopulations.name).to.be.equal('populate');
+    expect(parsePopulations.length).to.be.equal(2);
   });
 
   it('should parse string based path population', (done) => {
     const _populate = { path: 'customer' };
     const query = { populate: 'customer' };
 
-    parser.populate(JSON.stringify(query), (error, populate) => {
+    parsePopulations(JSON.stringify(query), (error, populate) => {
       expect(error).to.not.exist;
       expect(populate).to.exist;
       expect(populate).to.have.length(1);
@@ -55,7 +55,7 @@ describe('populate', () => {
     const _populate = [{ path: 'customer' }, { path: 'items' }];
     const query = { populate: 'customer,items' };
 
-    parser.populate(JSON.stringify(query), (error, populate) => {
+    parsePopulations(JSON.stringify(query), (error, populate) => {
       expect(error).to.not.exist;
       expect(populate).to.exist;
       expect(populate).to.have.length(2);
@@ -82,7 +82,7 @@ describe('populate', () => {
     const _populate = { path: 'customer', select: { name: 1 } };
     const query = { populate: 'customer', fields: { customer: 'name' } };
 
-    parser.populate(JSON.stringify(query), (error, populate) => {
+    parsePopulations(JSON.stringify(query), (error, populate) => {
       expect(error).to.not.exist;
       expect(populate).to.exist;
       expect(populate).to.have.length(1);
@@ -120,7 +120,7 @@ describe('populate', () => {
       },
     };
 
-    parser.populate(JSON.stringify(query), (error, populate) => {
+    parsePopulations(JSON.stringify(query), (error, populate) => {
       expect(error).to.not.exist;
       expect(populate).to.exist;
       expect(populate).to.have.length(2);
@@ -142,7 +142,7 @@ describe('populate', () => {
       },
     };
 
-    parser.populate(JSON.stringify(query), (error, populate) => {
+    parsePopulations(JSON.stringify(query), (error, populate) => {
       expect(error).to.not.exist;
       expect(populate).to.exist;
       expect(populate).to.have.length(2);
@@ -155,7 +155,7 @@ describe('populate', () => {
     const _populate = { path: 'customer' };
     const query = { populate: _populate };
 
-    parser.populate(query, (error, populate) => {
+    parsePopulations(query, (error, populate) => {
       expect(error).to.not.exist;
       expect(populate).to.exist;
       expect(populate[0]).to.eql(_populate);
@@ -167,7 +167,7 @@ describe('populate', () => {
     const _populate = { path: 'customer', select: { name: 1 } };
     const query = { populate: { path: 'customer', select: 'name' } };
 
-    parser.populate(query, (error, populate) => {
+    parsePopulations(query, (error, populate) => {
       expect(error).to.not.exist;
       expect(populate).to.exist;
       expect(populate[0]).to.eql(_populate);
@@ -185,7 +185,7 @@ describe('populate', () => {
     };
     const query = { populate: { path: 'customer', select: 'name,-price' } };
 
-    parser.populate(query, (error, populate) => {
+    parsePopulations(query, (error, populate) => {
       expect(error).to.not.exist;
       expect(populate).to.exist;
       expect(populate[0]).to.eql(_populate);
@@ -197,7 +197,7 @@ describe('populate', () => {
     const _populate = [{ path: 'customer' }, { path: 'items' }];
     const query = { populate: _populate };
 
-    parser.populate(query, (error, populate) => {
+    parsePopulations(query, (error, populate) => {
       expect(error).to.not.exist;
       expect(populate).to.exist;
       expect(populate).to.eql(_populate);
@@ -217,7 +217,7 @@ describe('populate', () => {
       ],
     };
 
-    parser.populate(query, (error, populate) => {
+    parsePopulations(query, (error, populate) => {
       expect(error).to.not.exist;
       expect(populate).to.exist;
       expect(populate).to.eql(_populate);
