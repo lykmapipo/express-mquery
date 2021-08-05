@@ -8,10 +8,9 @@
  * @see {@link http://mgmco.github.io/api-query-spec/}
  * @author lally elias <lallyelias87@mail.com>
  * @since 0.2.2
- * @version 0.1.0
+ * @version 1.3.0
  * @public
  */
-
 import { mquery } from './internals';
 
 export default mquery;

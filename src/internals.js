@@ -8,7 +8,7 @@
  * @see {@link http://mgmco.github.io/api-query-spec/}
  * @author lally elias <lallyelias87@mail.com>
  * @since 0.2.2
- * @version 0.1.0
+ * @version 1.3.0
  * @public
  */
 
@@ -53,9 +53,9 @@ import autoParse from 'auto-parse';
  * @since 0.2.2
  * @version 0.1.0
  * @public
+ * @static
  * @example
  *
- * comparison
  * GET /customers?query={"name":"Bob"}
  * GET /customers?filter[name]=Bob
  * GET /customers?filter[name]={"$regex":"/Bo$/"}
@@ -63,7 +63,6 @@ import autoParse from 'auto-parse';
  * GET /customers?filter[age]={"$gt":12}
  * GET /customers?filter[age][$gt]=12
  */
-
 export const filter = (options, done) => {
   // try parsing filters
   try {
@@ -111,7 +110,6 @@ export const filter = (options, done) => {
  *
  * curl -i -H 'If-Modified-Since: Wed, 12 Nov 2014 15:44:46 GMT' http://localhost:3000/invoices
  */
-
 export const headers = (options, done) => {
   // try parsing headers
   try {
@@ -151,7 +149,8 @@ export const headers = (options, done) => {
  * @param {object} options valid query params options to parse for sorting
  * conditions
  * @param {Function} done a callback to invoke on success or failure
- * @returns {object} valid mongoose(mongodb) pagination query conditions(or criteria)
+ * @returns {object} valid mongoose(mongodb) pagination query
+ * conditions(or criteria)
  * @see {@link http://jsonapi.org/format/#fetching-pagination}
  * @see {@link http://mongoosejs.com/docs/api.html#query_Query-skip}
  * @see {@link http://mongoosejs.com/docs/api.html#query_Query-limit}
@@ -169,7 +168,6 @@ export const headers = (options, done) => {
  * GET /customers?page[number]=1&page[limit]=10
  * GET /customers?page[number]=1&page[size]=10
  */
-
 export const paginate = (options, done) => {
   // try parsing paginations
   try {
@@ -242,6 +240,7 @@ export const paginate = (options, done) => {
  * @version 0.2.0
  * @public
  * @example
+ *
  * GET /users?select=name
  * GET /users?select=name,email
  * GET /users?select=-name
@@ -263,7 +262,6 @@ export const paginate = (options, done) => {
  * GET /users?select={"location.name":0, "location.address": 0}
  * GET /users?fields[location]=-name,-address
  */
-
 export const select = (options, done) => {
   // try parsing projections
   try {
@@ -360,7 +358,8 @@ export const select = (options, done) => {
  * @param {object} options valid query params options to parse for
  * population or includes
  * @param {Function} done a callback to invoke on success or failure
- * @returns {object} valid mongoose(mongodb) query population conditions(or criteria)
+ * @returns {object} valid mongoose(mongodb) query population
+ * conditions(or criteria)
  * @see {@link http://jsonapi.org/format/#fetching-includes}
  * @see {@link http://mongoosejs.com/docs/api.html#query_Query-populate}
  * @see {@link http://mongoosejs.com/docs/populate.html#deep-populate}
@@ -369,6 +368,7 @@ export const select = (options, done) => {
  * @version 0.1.0
  * @public
  * @example
+ *
  * /invoice?populate=customer
  * /invoice?populate=customer,items
  * /invoice?populate=customer.name,items.name,items.price
@@ -392,7 +392,6 @@ export const select = (options, done) => {
  * /invoice?includes[customer]=name,number&includes[items]=name,price
  * /invoice?includes=customer,items&fields[customer]=name,number&fields[items]=name,price
  */
-
 export const populate = (options, done) => {
   // try parsing population
   // TODO support population on related object fields selection
@@ -502,7 +501,6 @@ export const populate = (options, done) => {
  * GET /users?sort={"name":"asc", "email": "desc"}
  * GET /users?sort={"name":"ascending", "email": "descending"}
  */
-
 export const sort = (options, done) => {
   // try parsing sorts
   try {
@@ -549,6 +547,7 @@ export const sort = (options, done) => {
 
 /**
  * @name parse
+ * @param done
  * @function parse
  * @param {string} string valid json string
  * @description parse specified JSON string into Javascript value or object
@@ -559,7 +558,6 @@ export const sort = (options, done) => {
  * @version 0.1.0
  * @public
  */
-
 export const parse = (string, done) => {
   // TODO navigate paths and change them to valid mongodb query
 
@@ -615,7 +613,7 @@ export const parse = (string, done) => {
  * @example
  *
  * import express from 'express';
- * import {mquery} from 'express-mquery';
+ * import mquery from 'express-mquery';
  *
  *
  * const app = express();
