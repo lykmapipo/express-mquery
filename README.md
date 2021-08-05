@@ -10,7 +10,7 @@ Expose [mongoose](https://github.com/Automattic/mongoose) query API through HTTP
  - [filtering](http://jsonapi.org/format/#fetching-filtering)
  - [includes](http://jsonapi.org/format/#fetching-includes)
 
-*Note: Due to refactoring, you must install [mongoose-rest-actions](https://github.com/lykmapipo/mongoose-rest-actions) to have back mongoose plugin*
+*Note: Checkout the current [specification](https://github.com/lykmapipo/express-mquery/blob/master/SPECIFICATION.md) for more information.*
 
 ## Requirements
 
