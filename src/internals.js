@@ -81,12 +81,12 @@ export const filter = (options, done) => {
 
     // TODO ignore ['$jsonSchema', '$where']
 
-    done(null, filters);
+    return done(null, filters);
   } catch (error) {
     // catch all errors
     error.message = error.message || 'Bad Request';
     error.status = 400;
-    done(error);
+    return done(error);
   }
 };
 
@@ -132,12 +132,12 @@ export const headers = (options, done) => {
       includes(DATE_HEADERS, key) ? new Date(value) : value
     );
 
-    done(null, payload);
+    return done(null, payload);
   } catch (error) {
     // catch all errors
     error.message = error.message || 'Bad Request';
     error.status = 400;
-    done(error);
+    return done(error);
   }
 };
 
@@ -215,12 +215,12 @@ export const paginate = (options, done) => {
     skip = !hasSkip && page > 0 ? (page - 1) * limit : skip;
     paginations = merge({}, paginations, { skip });
 
-    done(null, paginations);
+    return done(null, paginations);
   } catch (error) {
     // catch all errors
     error.message = error.message || 'Bad Request';
     error.status = 400;
-    done(error);
+    return done(error);
   }
 };
 
@@ -341,12 +341,12 @@ export const select = (options, done) => {
       {}
     );
 
-    done(null, projections);
+    return done(null, projections);
   } catch (error) {
     // catch all errors
     error.message = error.message || 'Bad Request';
     error.status = 400;
-    done(error);
+    return done(error);
   }
 };
 
@@ -431,7 +431,7 @@ export const populate = (options, done) => {
     populations = compact([].concat(populations));
 
     // build populations
-    waterfall(
+    return waterfall(
       [
         // parse field selections
         (next) => {
@@ -470,7 +470,7 @@ export const populate = (options, done) => {
     // catch all errors
     error.message = error.message || 'Bad Request';
     error.status = 400;
-    done(error);
+    return done(error);
   }
 };
 
@@ -536,21 +536,21 @@ export const sort = (options, done) => {
       );
     }
 
-    done(null, sorts);
+    return done(null, sorts);
   } catch (error) {
     // catch all errors
     error.message = error.message || 'Bad Request';
     error.status = 400;
-    done(error);
+    return done(error);
   }
 };
 
 /**
  * @name parse
- * @param done
  * @function parse
- * @param {string} string valid json string
  * @description parse specified JSON string into Javascript value or object
+ * @param {string} string valid json string
+ * @param {Function} done a callback to invoke on success or failure
  * @returns {object} constructed JavaScript value or object from JSON key value
  * @see {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/parse}
  * @author lally elias <lallyelias87@mail.com>
@@ -565,7 +565,7 @@ export const parse = (string, done) => {
   try {
     const json = autoParse(string);
 
-    parallel(
+    return parallel(
       {
         filter: (next) => filter(json, next),
         headers: (next) => headers(json, next),
@@ -598,7 +598,7 @@ export const parse = (string, done) => {
   } catch (error) {
     error.message = error.message || 'Bad Request';
     error.status = 400;
-    done(error);
+    return done(error);
   }
 };
 
