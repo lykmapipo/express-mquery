@@ -1,0 +1,6 @@
+node_modules
+libcov
+coverage
+.nyc_output
+package.json
+package-lock.json
