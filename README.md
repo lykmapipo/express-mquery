@@ -18,37 +18,27 @@ Expose [mongoose](https://github.com/Automattic/mongoose) query API through HTTP
 
 ## Installation
 ```js
-$ npm install --save express-mquery mongoose-rest-actions
+$ npm install --save express-mquery
 ```
 
 ## Usage
 ```js
-//plugin rest actions plugin
-const mongoose = require('mongoose');
-const actions = require('mongoose-rest-actions');
-mongoose.plugin(actions);
-
-//add express middleware
-const expess = require('express');
-const mquery = require('express-mquery');
+import expess from 'express';
+import mquery from 'express-mquery';
 
 const app = express();
 app.use(mquery({ limit: 10, maxLimit: 50 }));
 
 ...
 
-app.get('/users', function(request, response, next) {
+app.get('/users', (request, response, next) => {
   
-  //obtain request.mquery
-  const options = request.mquery;
-
-  User
-    .get(options, function(error, results) {
-      ...handle error or reply
-    });
+  // obtain request.mquery
+  console.log(request.mquery);
 
 });
 ```
+
 ## Structure
 Once parse, `express-mquery` will extend `http request` with `mquery` field
 
