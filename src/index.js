@@ -42,7 +42,6 @@ import autoParse from 'auto-parse';
  * GET /customers?filter[name][$regex]="/Bo$/"
  * GET /customers?filter[age]={"$gt":12}
  * GET /customers?filter[age][$gt]=12
- *
  */
 
 export const filter = (options, done) => {
@@ -91,7 +90,6 @@ export const filter = (options, done) => {
  * or
  *
  * curl -i -H 'If-Modified-Since: Wed, 12 Nov 2014 15:44:46 GMT' http://localhost:3000/invoices
- *
  */
 
 export const headers = (options, done) => {
@@ -150,7 +148,6 @@ export const headers = (options, done) => {
  * GET /customers?page[number]=1&page[offset]=10
  * GET /customers?page[number]=1&page[limit]=10
  * GET /customers?page[number]=1&page[size]=10
- *
  */
 
 export const paginate = (options, done) => {
@@ -245,7 +242,6 @@ export const paginate = (options, done) => {
  *
  * GET /users?select={"location.name":0, "location.address": 0}
  * GET /users?fields[location]=-name,-address
- *
  */
 
 export const select = (options, done) => {
@@ -375,7 +371,6 @@ export const select = (options, done) => {
  *
  * /invoice?includes[customer]=name,number&includes[items]=name,price
  * /invoice?includes=customer,items&fields[customer]=name,number&fields[items]=name,price
- *
  */
 
 export const populate = (options, done) => {
@@ -605,7 +600,6 @@ export const parse = (string, done) => {
  *
  * const app = express();
  * app.use(mquery({limit: 10, maxLimit: 50}));
- *
  */
 export const mquery = (optns) => {
   // normalize options

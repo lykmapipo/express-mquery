@@ -1,23 +1,40 @@
-api
-config
-node_modules
-ssl
-.DS_STORE
-*~
-.idea
-nbproject
-test
-.git
-.gitignore
+# Logs
+logs
+*.log
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
 .tmp
-*.swo
-*.swp
-*.swn
-*.swm
-.jshintrc
+
+# Intermediate data
+.grunt
+.husky
+.nyc_output
+coverage
+libcov
+lib-cov
+*.lcov
+
+# Dependency directories
+node_modules/
+
+# Package files
+docs
+examples
+test
+CODE_OF_CONDUCT.md
+CONTRIBUTING.md
+
+# Configuration files
+.babelrc
 .editorconfig
-doc.html
-seeds
-fixtures
+.eslintignore
+.eslintrc
+.prettierignore
+.prettierrc
 .travis.yml
-Grintfile
+Gruntfile.js
+rollup.config.js

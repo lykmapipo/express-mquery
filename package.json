@@ -6,31 +6,23 @@
   "module": "es/index.js",
   "scripts": {
     "clean": "rimraf lib dist es umd logs",
+    "prepare": "husky install",
     "prebuild": "npm test && npm run clean",
     "build": "rollup -c",
-    "lint": "eslint --fix --ext .js src/ test/ rollup.config.js",
+    "lint": "eslint --fix --ext .js src/ test/ examples/ rollup.config.js",
+    "prettier": "prettier --write '**/*.{md,json,yml,html}'",
     "pretest": "npm run lint",
-    "test": "NODE_ENV=test nyc --reporter=html --reporter=text mocha --exit --require @babel/register test/**/*.spec.js",
-    "test:unit": "NODE_ENV=test mocha --require @babel/register test/unit/**/*.spec.js",
-    "test:integration": "npm run pretest && NODE_ENV=test mocha --require @babel/register test/integration/**/*.spec.js",
-    "dev": "NODE_ENV=development BASE_PATH=./examples babel-node ./examples/index.js"
+    "test": "NODE_ENV=test nyc --reporter=html --reporter=text mocha --exit --timeout=8000 --require @babel/register test/**/*.spec.js",
+    "test:unit": "NODE_ENV=test npm run pretest && NODE_ENV=test mocha --exit --timeout=8000 --require @babel/register test/unit/**/*.spec.js",
+    "test:integration": "NODE_ENV=test npm run pretest && NODE_ENV=test mocha --exit --timeout=8000 --require @babel/register test/integration/**/*.spec.js",
+    "coverage": "nyc report --reporter=text-lcov | coveralls",
+    "docs": "doxdox 'lib/**/*.js' -p package.json -l markdown -o DOCUMENTATION.md",
+    "cmt": "git add -A && git-cz",
+    "changelog": "changelog",
+    "chore:deps": "ncu -u && npm install --save",
+    "lint:config": "eslint --print-config rollup.config.js",
+    "examples": "NODE_ENV=development BASE_PATH=./examples babel-node ./examples/index.js"
   },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/lykmapipo/express-mquery.git"
-  },
-  "author": "Lally Elias",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/lykmapipo/express-mquery/issues"
-  },
-  "homepage": "https://github.com/lykmapipo/express-mquery",
-  "contributors": [
-    {
-      "name": "lykmapipo",
-      "github": "https://github.com/lykmapipo"
-    }
-  ],
   "keywords": [
     "express",
     "mongoose",
@@ -62,49 +54,82 @@
     "modified",
     "if-modified-since"
   ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lykmapipo/express-mquery.git"
+  },
+  "author": {
+    "name": "lykmapipo",
+    "email": "lallyelias87@gmail.com",
+    "url": "https://github.com/lykmapipo"
+  },
+  "contributors": [
+    {
+      "name": "lykmapipo",
+      "email": "lallyelias87@gmail.com",
+      "url": "https://github.com/lykmapipo"
+    },
+    {
+      "name": "rijkerd",
+      "url": "https://github.com/rijkerd"
+    },
+    {
+      "name": "codesxt",
+      "email": "brunofaundezv@gmail.com",
+      "url": "https://github.com/codesxt"
+    }
+  ],
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/lykmapipo/express-mquery/issues"
+  },
+  "homepage": "https://github.com/lykmapipo/express-mquery#readme",
+  "devDependencies": {
+    "@babel/cli": "^7.14.8",
+    "@babel/core": "^7.15.0",
+    "@babel/node": "^7.14.9",
+    "@babel/preset-env": "^7.15.0",
+    "@babel/register": "^7.14.5",
+    "@commitlint/cli": "^13.1.0",
+    "@commitlint/config-conventional": "^13.1.0",
+    "@commitlint/travis-cli": "^13.1.0",
+    "chai": "^4.3.4",
+    "commitizen": "^4.2.4",
+    "coveralls": "^3.1.1",
+    "cz-conventional-changelog": "^3.3.0",
+    "dot-prop": "^6.0.1",
+    "doxdox": "^3.0.0",
+    "eslint": "^7.32.0",
+    "eslint-config-airbnb-base": "^14.2.1",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-import": "^2.23.4",
+    "eslint-plugin-jsdoc": "^36.0.6",
+    "eslint-plugin-mocha": "^9.0.0",
+    "eslint-plugin-prettier": "^3.4.0",
+    "generate-changelog": "^1.8.0",
+    "handlebars": "^4.7.7",
+    "husky": "^7.0.1",
+    "lint-staged": "^11.1.1",
+    "lodash.template": "^4.5.0",
+    "mime": "^2.5.2",
+    "minimist": "^1.2.5",
+    "mocha": "^9.0.3",
+    "npm-check-updates": "^11.8.3",
+    "nyc": "^15.1.0",
+    "prettier": "^2.3.2",
+    "qs": "^6.10.1",
+    "rimraf": "^3.0.2",
+    "rollup": "^2.56.0",
+    "shelljs": "^0.8.4",
+    "supertest": "^6.1.4",
+    "websocket-extensions": "^0.1.4",
+    "yargs": "^17.1.0"
+  },
   "dependencies": {
     "async": ">=3.2.0",
     "auto-parse": ">=1.8.0",
     "express": ">=4.17.1",
     "lodash": ">=4.17.20"
-  },
-  "peerDependencies": {},
-  "devDependencies": {
-    "@babel/cli": "^7.13.10",
-    "@babel/core": "^7.13.10",
-    "@babel/node": "^7.13.10",
-    "@babel/preset-env": "^7.13.10",
-    "@babel/register": "^7.13.8",
-    "@commitlint/cli": "^12.0.1",
-    "@commitlint/config-conventional": "^12.0.1",
-    "@commitlint/travis-cli": "^12.0.1",
-    "body-parser": ">=1.19.0",
-    "chai": "^4.3.0",
-    "commitizen": "^4.2.3",
-    "dot-prop": "^6.0.1",
-    "eslint": "^7.22.0",
-    "eslint-config-airbnb-base": "^14.2.1",
-    "eslint-config-prettier": "^8.1.0",
-    "eslint-plugin-import": "^2.22.1",
-    "eslint-plugin-jsdoc": "^32.3.0",
-    "eslint-plugin-mocha": "^8.1.0",
-    "eslint-plugin-prettier": "^3.3.1",
-    "faker": "^5.4.0",
-    "handlebars": "^4.7.7",
-    "husky": "^5.1.3",
-    "lint-staged": "^10.5.4",
-    "lodash.template": "^4.5.0",
-    "minimist": "^1.2.5",
-    "mocha": "^8.3.0",
-    "nyc": "^15.1.0",
-    "prettier": "^2.3.1",
-    "qs": "^6.9.6",
-    "rollup": "^2.50.6",
-    "shelljs": "^0.8.4",
-    "sinon": "^9.2.4",
-    "sinon-chai": "^3.5.0",
-    "supertest": "^6.1.3",
-    "websocket-extensions": "^0.1.4"
   },
   "config": {
     "commitizen": {
@@ -117,9 +142,11 @@
     ]
   },
   "lint-staged": {
-    "src/**/*.js": [
-      "npm run lint",
-      "git add -A"
+    "*.js": [
+      "eslint --fix"
+    ],
+    "*.{md,json,yml,html}": [
+      "prettier --write"
     ]
   },
   "husky": {

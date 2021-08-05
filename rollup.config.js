@@ -4,13 +4,7 @@ import pkg from './package.json';
 export default [
   {
     input: 'src/index.js',
-    external: [
-      'os',
-      'fs',
-      'path',
-      ...keys(pkg.dependencies),
-      ...keys(pkg.peerDependencies),
-    ],
+    external: [...keys(pkg.dependencies), ...keys(pkg.peerDependencies)],
     output: [
       {
         file: pkg.main,
