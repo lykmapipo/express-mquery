@@ -1,3 +1,59 @@
+#### 1.3.0 (2021-08-05)
+
+##### Chores
+
+*  move lint config file to test folder ([d1c373fe](https://github.com/lykmapipo/express-mquery/commit/d1c373fee1bf85f318724a03ccd8be71d76015b7))
+*  install deps and rollup configuration ([d51f5a72](https://github.com/lykmapipo/express-mquery/commit/d51f5a7223455a1664df60dfa7899d18b73c5f77))
+*  setup editor configuration ([4760cebf](https://github.com/lykmapipo/express-mquery/commit/4760cebf82e6282b4669fc73442e23cd517a77e7))
+*  delete unused files ([dbd73bd7](https://github.com/lykmapipo/express-mquery/commit/dbd73bd761f46913bd9ba3bbd1734f5267a583d1))
+*  setup eslint and prettier ([8c805426](https://github.com/lykmapipo/express-mquery/commit/8c805426a601645a6353916295e468d60121fe62))
+* **deps:**  bump lodash from 4.17.20 to 4.17.21 ([9ef73590](https://github.com/lykmapipo/express-mquery/commit/9ef73590304fda49e673272a8417b77c5ec8399a))
+
+##### Documentation Changes
+
+*  update status badge & license year ([2b0313a3](https://github.com/lykmapipo/express-mquery/commit/2b0313a39eb27307db7ff87637db0c4677c6db39))
+*  add code of conduct & contributing guide ([4a969214](https://github.com/lykmapipo/express-mquery/commit/4a969214278ebad7e0586ca19602087e02094eef))
+* **readme:**
+  *  update usage ([de74dcc5](https://github.com/lykmapipo/express-mquery/commit/de74dcc557b14ae6342022712e76526a758d7237))
+  *  add link to specifications ([2607699f](https://github.com/lykmapipo/express-mquery/commit/2607699f598c4e4b7879978ae29b43a65750b6a0))
+
+##### Other Changes
+
+* //github.com/rijkerd/express-mquery into rijkerd-feature/migrate-to-es6 ([f2350133](https://github.com/lykmapipo/express-mquery/commit/f2350133320a10a3db79601d5096ef91c117bee8))
+*  install deps ([4a822850](https://github.com/lykmapipo/express-mquery/commit/4a822850313407f7bb5f6f9e1c13161b059a02d1))
+*  add deps and scripts ([1c3dced0](https://github.com/lykmapipo/express-mquery/commit/1c3dced0151f044ff9649122eb0cc66f00ecd1ce))
+*  implement on mquery on default export ([05c6cc05](https://github.com/lykmapipo/express-mquery/commit/05c6cc050fc9d0de3517cfb0674e118b993eff74))
+*  implement middleware test to es6 ([2d5c0206](https://github.com/lykmapipo/express-mquery/commit/2d5c0206d8b4bac72d586ef838b72c5753f876f9))
+*  implement examples to es6 ([f64131bb](https://github.com/lykmapipo/express-mquery/commit/f64131bbbdad1143c68aef4677e86aa59da40a77))
+*  remove gruntfile and index ([1674d9cd](https://github.com/lykmapipo/express-mquery/commit/1674d9cd0649d6fcefa5ceb7c137b07eee779b84))
+*  add nyc_output ([988e9037](https://github.com/lykmapipo/express-mquery/commit/988e9037223e533e97f87ba44123cf4a9ab23321))
+*  ensure select field with data ([d3f9727f](https://github.com/lykmapipo/express-mquery/commit/d3f9727f643cdbd9686ad20488d9e07a37c0e83c))
+*  migrate parser test to es6 ([b2dfdf10](https://github.com/lykmapipo/express-mquery/commit/b2dfdf10ecc7a8c911d9407bdfa62da00c1964a1))
+*  migrate sort test to es6 ([b322e19f](https://github.com/lykmapipo/express-mquery/commit/b322e19f6d7931e40267ed430943869befea8302))
+*  migrate select test to es6 ([21ebdaba](https://github.com/lykmapipo/express-mquery/commit/21ebdabad82dd6e01487f8b68f7b6c4838095882))
+*  migrate populate test to es6 ([a98dd9b6](https://github.com/lykmapipo/express-mquery/commit/a98dd9b6cbf76ab81c3443c0adaf621fef49b6f8))
+*  migrate paginate to es6 ([8d85fdb3](https://github.com/lykmapipo/express-mquery/commit/8d85fdb3dd135809b15c7f00c1808cfc8db7f4c1))
+
+##### Refactors
+
+* **internals:**
+  *  ensure returned values ([c9772135](https://github.com/lykmapipo/express-mquery/commit/c97721357162647fc7dfc8a01026b50a2501a577))
+  *  used named imports ([8df01d53](https://github.com/lykmapipo/express-mquery/commit/8df01d53cb500b515fabcdbba9e08fbe3096c9e7))
+* **es6:**  improve package definition ([030d8766](https://github.com/lykmapipo/express-mquery/commit/030d87661c9df90624e4119e5036a8837cf6d4eb))
+*  migrate to es6 ([f2121bf2](https://github.com/lykmapipo/express-mquery/commit/f2121bf2da4804a2ab7edc6e5d5e7fb2798f48d9))
+*  setup rollup configuration file ([53a853ba](https://github.com/lykmapipo/express-mquery/commit/53a853ba7349cf394e291a47e304b40deb9206aa))
+*  setup babel configuration ([8dc269a8](https://github.com/lykmapipo/express-mquery/commit/8dc269a8c91d16efaf56f34e4e59da7d56169637))
+
+##### Code Style Changes
+
+* **internals:**  improve jsdocs ([bf955bc3](https://github.com/lykmapipo/express-mquery/commit/bf955bc36714b819db8aa22eac1e31a0775b0fd0))
+
+##### Tests
+
+*  migrate headers to es6 ([61cc33a8](https://github.com/lykmapipo/express-mquery/commit/61cc33a860b64f468d5282071ae316066920353c))
+*  migrate filter to es6 ([c9288f6c](https://github.com/lykmapipo/express-mquery/commit/c9288f6c72d23ed25e9cab928d8724305a2fd52b))
+*  setup eslint configuration on unit test ([0d456962](https://github.com/lykmapipo/express-mquery/commit/0d456962eb3aec107417bf025bbb0e1118c79d87))
+
 #### 1.2.14 (2021-02-16)
 
 ##### Chores

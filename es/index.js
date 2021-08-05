@@ -1,25 +1,4 @@
-import {
-  camelCase,
-  compact,
-  forEach,
-  get,
-  has,
-  includes,
-  isEmpty,
-  isNaN,
-  isPlainObject,
-  isString,
-  map,
-  mapKeys,
-  mapValues,
-  merge,
-  omit,
-  omitBy,
-  pick,
-  reduce,
-  trim,
-  uniq,
-} from 'lodash';
+import { merge, map, omit, omitBy, isEmpty, pick, mapKeys, camelCase, mapValues, includes, isPlainObject, get, has, isString, isNaN, compact, trim, uniq, forEach, reduce } from 'lodash';
 import { parallel, waterfall } from 'async';
 import autoParse from 'auto-parse';
 
@@ -49,7 +28,7 @@ import autoParse from 'auto-parse';
  * GET /customers?filter[age]={"$gt":12}
  * GET /customers?filter[age][$gt]=12
  */
-export const filter = (options, done) => {
+const filter = (options, done) => {
   // try parsing filters
   try {
     // ensure query
@@ -96,7 +75,7 @@ export const filter = (options, done) => {
  *
  * curl -i -H 'If-Modified-Since: Wed, 12 Nov 2014 15:44:46 GMT' http://localhost:3000/invoices
  */
-export const headers = (options, done) => {
+const headers = (options, done) => {
   // try parsing headers
   try {
     // ensure query
@@ -154,7 +133,7 @@ export const headers = (options, done) => {
  * GET /customers?page[number]=1&page[limit]=10
  * GET /customers?page[number]=1&page[size]=10
  */
-export const paginate = (options, done) => {
+const paginate = (options, done) => {
   // try parsing paginations
   try {
     // ensure query
@@ -248,7 +227,7 @@ export const paginate = (options, done) => {
  * GET /users?select={"location.name":0, "location.address": 0}
  * GET /users?fields[location]=-name,-address
  */
-export const select = (options, done) => {
+const select = (options, done) => {
   // try parsing projections
   try {
     // ensure query
@@ -378,7 +357,7 @@ export const select = (options, done) => {
  * /invoice?includes[customer]=name,number&includes[items]=name,price
  * /invoice?includes=customer,items&fields[customer]=name,number&fields[items]=name,price
  */
-export const populate = (options, done) => {
+const populate = (options, done) => {
   // try parsing population
   // TODO support population on related object fields selection
   // TODO support nested population
@@ -487,7 +466,7 @@ export const populate = (options, done) => {
  * GET /users?sort={"name":"asc", "email": "desc"}
  * GET /users?sort={"name":"ascending", "email": "descending"}
  */
-export const sort = (options, done) => {
+const sort = (options, done) => {
   // try parsing sorts
   try {
     // ensure query
@@ -544,7 +523,7 @@ export const sort = (options, done) => {
  * @version 0.1.0
  * @public
  */
-export const parse = (string, done) => {
+const parse = (string, done) => {
   // TODO navigate paths and change them to valid mongodb query
 
   // try to parse json string
@@ -605,7 +584,7 @@ export const parse = (string, done) => {
  * const app = express();
  * app.use(mquery({limit: 10, maxLimit: 50}));
  */
-export const mquery = (optns) => {
+const mquery = (optns) => {
   // normalize options
   const options = merge(
     {},
@@ -634,3 +613,19 @@ export const mquery = (optns) => {
     },
   ];
 };
+
+/**
+ * @module expess-mquery
+ * @name expess-mquery
+ * @description Expose mongoose query API through HTTP request
+ * @see {@link https://docs.mongodb.com/manual/reference/operator/query/}
+ * @see {@link http://mongoosejs.com/docs/api.html#Query}
+ * @see {@link http://jsonapi.org/recommendations/}
+ * @see {@link http://mgmco.github.io/api-query-spec/}
+ * @author lally elias <lallyelias87@mail.com>
+ * @since 0.2.2
+ * @version 1.3.0
+ * @public
+ */
+
+export { mquery as default };

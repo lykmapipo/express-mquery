@@ -13,6 +13,7 @@ export default [
         esModule: false,
         preferConst: true,
         strict: true,
+        exports: 'auto',
       },
       { file: pkg.module, format: 'es' },
     ],
