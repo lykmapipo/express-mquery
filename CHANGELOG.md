@@ -1,3 +1,13 @@
+#### 1.3.1 (2021-08-23)
+
+##### Chores
+
+* **deps:**  force latest version & audit fix ([f603a40c](https://github.com/lykmapipo/express-mquery/commit/f603a40cc6aaf69e59e8a4af69f8c5ea00c5b750))
+
+##### Documentation Changes
+
+* **readme:**  update build status to travis.com ([21f9fda2](https://github.com/lykmapipo/express-mquery/commit/21f9fda257d178222f3d7cc1455bb7446f7a0bb3))
+
 #### 1.3.0 (2021-08-05)
 
 ##### Chores
