@@ -1,7 +1,7 @@
 express-mquery
 ====================
 
-[![Build Status](https://travis-ci.com/lykmapipo/express-mquery.svg?branch=master)](https://travis-ci.com/lykmapipo/express-mquery)
+[![Build Status](https://app.travis-ci.com/lykmapipo/express-mquery.svg?branch=master)](https://app.travis-ci.com/lykmapipo/express-mquery)
 [![Dependencies Status](https://david-dm.org/lykmapipo/express-mquery.svg)](https://david-dm.org/lykmapipo/express-mquery)
 [![Coverage Status](https://coveralls.io/repos/github/lykmapipo/express-mquery/badge.svg?branch=master)](https://coveralls.io/github/lykmapipo/express-mquery?branch=master)
 [![GitHub License](https://img.shields.io/github/license/lykmapipo/express-mquery)](https://github.com/lykmapipo/express-mquery/blob/master/LICENSE)
