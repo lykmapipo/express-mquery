@@ -121,7 +121,7 @@
     "prettier": "^2.5.1",
     "qs": "^6.10.3",
     "rimraf": "^3.0.2",
-    "rollup": "^2.64.0",
+    "rollup": "^3.29.5",
     "shelljs": "^0.8.5",
     "supertest": "^6.2.2",
     "websocket-extensions": "^0.1.4",
